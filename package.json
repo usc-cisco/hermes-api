@@ -6,7 +6,8 @@
     "dev": "bun run --watch src/index.ts",
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
-    "prepare": "husky"
+    "prepare": "husky",
+    "test": "vitest"
   },
   "dependencies": {
     "@commitlint/cli": "^19.6.1",
