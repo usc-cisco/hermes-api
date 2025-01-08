@@ -1,9 +1,12 @@
 {
   "name": "hermes-api",
-  "build": {
-    "dockerfile": "Dockerfile"
-  },
+  "image": "oven/bun",
   "forwardPorts": [3000],
+  "features": {
+    "ghcr.io/devcontainers/features/common-utils:2": {
+      "configureZshAsDefaultShell": true
+    }
+  },
   "postCreateCommand": "bun install",
   "customizations": {
     "vscode": {
