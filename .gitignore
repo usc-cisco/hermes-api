@@ -1,0 +1,25 @@
+# dependencies
+/node_modules
+
+# testing
+/coverage
+
+# production
+/build
+
+# misc
+*.pem
+.DS_Store
+Thumbs.db
+
+# env files
+.env*
+!.env.example
+
+# bun
+**/*.bun
+**/*.log
+**/*.tar.gz
+**/*.tgz
+**/*.trace
+**/*.zip
