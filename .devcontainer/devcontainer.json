@@ -1,12 +1,11 @@
 {
-  "name": "hermes-api",
-  "image": "oven/bun",
-  "forwardPorts": [3000],
+  "name": "Debian",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
   "features": {
-    "ghcr.io/devcontainers/features/common-utils:2": {
-      "configureZshAsDefaultShell": true
-    }
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/michidk/devcontainers-features/bun:1": {}
   },
+  "forwardPorts": [3000],
   "postCreateCommand": "bun install",
   "customizations": {
     "vscode": {
@@ -16,5 +15,6 @@
         "editor.tabSize": 2
       }
     }
-  }
+  },
+  "remoteUser": "root"
 }
