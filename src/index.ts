@@ -1,8 +1,9 @@
 import { env } from "./config/env.config"
+import { CourseUnion } from "./models/CourseUnion"
 import { queue } from "./routers/queue.router"
 import { Logger } from "./utils/logger.util"
 import { swagger } from "@elysiajs/swagger"
-import { Elysia } from "elysia"
+import { Elysia, t } from "elysia"
 
 const app = new Elysia()
   .use(swagger())
