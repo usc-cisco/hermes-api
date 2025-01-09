@@ -23,3 +23,9 @@ Thumbs.db
 **/*.tgz
 **/*.trace
 **/*.zip
+
+# sqlite
+sqlite.db
+
+# drizzle
+drizzle
