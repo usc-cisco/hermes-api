@@ -2,7 +2,7 @@ import { CourseUnion } from "../models/CourseUnion"
 import { StatusUnion } from "../models/StatusUnion"
 import Elysia, { t } from "elysia"
 
-export const queue = new Elysia({ prefix: "/coordinator" })
+export const coordinator = new Elysia({ prefix: "/coordinator" })
   .model({
     course: t.Object({
       course: CourseUnion,
