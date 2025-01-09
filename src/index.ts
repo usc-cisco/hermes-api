@@ -5,8 +5,10 @@ import { Logger } from "./utils/logger.util"
 import { cors } from "@elysiajs/cors"
 import { swagger } from "@elysiajs/swagger"
 import { Elysia } from "elysia"
+import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
+  .use(rateLimit({ max: 5, duration: 2000, errorResponse: "Rate limit reached" }))
   .use(swagger())
   .use(cors())
   .onError(({ error, code }) => {
