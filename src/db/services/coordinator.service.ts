@@ -16,7 +16,7 @@ export const coordinatorService: ICoordinatorService = {
   async findCoordinatorByCourse(courseName: CourseNameEnum): Promise<Partial<Coordinator>> {
     const records = await db.select().from(coordinators).where(eq(coordinators.courseName, courseName))
 
-    const record: Partial<SelectCoordinator> = records[0]
+    const record: SelectCoordinator = records[0]
 
     return record
   },

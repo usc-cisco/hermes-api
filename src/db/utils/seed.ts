@@ -1,4 +1,6 @@
 import { db } from ".."
+import { CoordinatorStatusEnum } from "../../types/enums/CoordinatorStatusEnum"
+import { coordinators } from "../models/coordinator.model"
 import { courses } from "../models/courses.model"
 import { queueNumbers } from "../models/queue-number.model"
 
@@ -21,11 +23,30 @@ const coursesResult = await db
 // Seed queue numbers for each course
 const queueData = coursesResult.flatMap((course) => {
   return Array.from({ length: 5 }, (_, index) => ({
-    studentId: parseInt(`${course.id}${index + 1}`), // Creates unique placeholder student ID (11, 12, 13, etc)
+    studentId: parseInt(`${course.id}${index + 1}`),
     courseId: course.id,
     queueNumber: index + 1,
   }))
 })
+
+// Seed coordinators
+await db.insert(coordinators).values([
+  {
+    name: "Doriz Roa",
+    courseName: "BSCS",
+    status: CoordinatorStatusEnum.AVAILABLE,
+  },
+  {
+    name: "Gran Sabandal",
+    courseName: "BSIT",
+    status: CoordinatorStatusEnum.AVAILABLE,
+  },
+  {
+    name: "Glenn Pepito",
+    courseName: "BSIS",
+    status: CoordinatorStatusEnum.AVAILABLE,
+  },
+])
 
 await db.insert(queueNumbers).values(queueData)
 
