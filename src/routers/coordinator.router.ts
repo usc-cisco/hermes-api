@@ -1,5 +1,6 @@
-import { CourseUnion } from "../models/CourseUnion"
-import { StatusUnion } from "../models/StatusUnion"
+import { coordinatorService } from "../db/services/coordinator.service"
+import { CourseUnion } from "../types/entities/dtos/CourseUnion"
+import { StatusUnion } from "../types/entities/dtos/StatusUnion"
 import Elysia, { t } from "elysia"
 
 export const coordinator = new Elysia({ prefix: "/coordinator" })
@@ -14,13 +15,13 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
   .guard({
     params: "course",
   })
-  .get("/:course", ({ params: { course } }) => {
-    return `The coordinator of ${course} is X and their status is Y`
+  .get("/:course", async ({ params: { course } }) => {
+    return await coordinatorService.findCoordinatorByCourse(course)
   })
   .patch(
     "/:course/coordinator/status",
-    ({ params: { course } }) => {
-      return `Successfully updated the status of the coordinator for ${course}`
+    async ({ params: { course } }) => {
+      return await coordinatorService.findCoordinatorStatus(course)
     },
     {
       body: "newStatus",
