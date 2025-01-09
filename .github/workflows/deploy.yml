@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci/gh-action-setup-build-deploy-workflow-pr-19 # test
 
 jobs:
   build:
