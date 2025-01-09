@@ -1,4 +1,4 @@
-import { CourseUnion } from "../models/CourseUnion"
+import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import Elysia, { t } from "elysia"
 
 export const queue = new Elysia({ prefix: "/queue" })

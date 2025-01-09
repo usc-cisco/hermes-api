@@ -25,3 +25,8 @@ Thumbs.db
 **/*.zip
 
 *.exe
+# sqlite
+sqlite.db
+
+# drizzle
+drizzle
