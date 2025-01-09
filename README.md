@@ -11,10 +11,6 @@ Ensure the following are installed:
   - [Dev Containers Extension](https://marketplace.visualstudio.com/items?itemName=ms-vscode-remote.remote-containers)
 - [Docker](https://docs.docker.com/engine/install/)
 
-For WSL 2 users, read this [article](https://code.visualstudio.com/blogs/2020/07/01/containers-wsl).
-
-TL;DR: Windows users may need Docker Desktop, which will automatically detect WSL 2 if installed. You may or may not use the WSL integration, but Docker must be installed regardless of the backend.
-
 ## Getting Started
 
 ### 1. Clone the Repository
