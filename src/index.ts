@@ -3,7 +3,7 @@ import { coordinator } from "./routers/coordinator.router"
 import { queue } from "./routers/queue.router"
 import { Logger } from "./utils/logger.util"
 import { swagger } from "@elysiajs/swagger"
-import { Elysia, t } from "elysia"
+import { Elysia } from "elysia"
 
 const app = new Elysia()
   .use(swagger())
