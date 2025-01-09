@@ -11,6 +11,7 @@ const app = new Elysia()
   .use(rateLimit({ max: 5, duration: 2000, errorResponse: "Rate limit reached" }))
   .use(swagger())
   .use(cors())
+  .use(Logger.middleware())
   .onError(({ error, code }) => {
     Logger.error("The server encountered an error", error)
 
