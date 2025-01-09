@@ -6,17 +6,17 @@ import { InsertQueueNumber, SelectQueueNumber, queueNumbers } from "../models/qu
 import { asc, eq } from "drizzle-orm"
 
 export const queueNumberService: IQueueNumberService = {
-  async findByCourse(course_id: CourseIdEnum): Promise<QueueNumber[]> {
-    const records = await db.select().from(queueNumbers).where(eq(queueNumbers.courseId, course_id))
+  async findByCourse(courseId: CourseIdEnum): Promise<QueueNumber[]> {
+    const records = await db.select().from(queueNumbers).where(eq(queueNumbers.courseId, courseId))
 
     return records
   },
 
-  async findCurrentQueueByCourse(course_id: CourseIdEnum): Promise<QueueNumber> {
+  async findCurrentQueueByCourse(courseId: CourseIdEnum): Promise<QueueNumber> {
     const records = await db
       .select()
       .from(queueNumbers)
-      .where(eq(queueNumbers.courseId, course_id))
+      .where(eq(queueNumbers.courseId, courseId))
       .orderBy(asc(queueNumbers.queueNumber))
       .limit(1)
 
@@ -25,12 +25,12 @@ export const queueNumberService: IQueueNumberService = {
     return record
   },
 
-  async enqueue(student_id: number, course_id: CourseIdEnum): Promise<QueueNumber> {
-    const count = await db.$count(queueNumbers, eq(queueNumbers.courseId, course_id))
+  async enqueue(studentId: number, courseId: CourseIdEnum): Promise<QueueNumber> {
+    const count = await db.$count(queueNumbers, eq(queueNumbers.courseId, courseId))
 
     const data: InsertQueueNumber = {
-      studentId: student_id,
-      courseId: course_id,
+      studentId: studentId,
+      courseId: courseId,
       queueNumber: count + 1,
     }
 

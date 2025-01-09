@@ -8,15 +8,12 @@ const coursesResult = await db
   .values([
     {
       courseName: "BSCS",
-      coordinatorAvailability: true,
     },
     {
       courseName: "BSIT",
-      coordinatorAvailability: true,
     },
     {
       courseName: "BSIS",
-      coordinatorAvailability: true,
     },
   ])
   .returning({ id: courses.id })
