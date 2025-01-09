@@ -4,10 +4,11 @@
   "module": "src/index.js",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
+    "build": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile server ./src/index.ts",
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
     "prepare": "husky",
-    "test": "vitest",
+    "test": "vitest --run --passWithNoTests",
     "db:migration-generate": "bunx drizzle-kit generate --dialect sqlite --schema ./src/db/models",
     "db:migrate": "bun run ./src/db/utils/migrate.ts",
     "db:seed": "bun run ./src/db/utils/seed.ts"
@@ -41,5 +42,8 @@
     "commitizen": {
       "path": "./node_modules/cz-conventional-changelog"
     }
+  },
+  "optionalDependencies": {
+    "@rollup/rollup-linux-x64-gnu": "^4.30.1"
   }
 }
