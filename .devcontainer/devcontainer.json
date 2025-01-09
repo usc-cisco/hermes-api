@@ -1,7 +1,9 @@
 {
-  "name": "hermes-api",
-  "build": {
-    "dockerfile": "Dockerfile"
+  "name": "Debian",
+  "image": "mcr.microsoft.com/devcontainers/base:bookworm",
+  "features": {
+    "ghcr.io/devcontainers/features/node:1": {},
+    "ghcr.io/michidk/devcontainers-features/bun:1": {}
   },
   "forwardPorts": [3000],
   "postCreateCommand": "bun install",
@@ -13,5 +15,6 @@
         "editor.tabSize": 2
       }
     }
-  }
+  },
+  "remoteUser": "root"
 }
