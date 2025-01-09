@@ -4,7 +4,6 @@ import { integer, sqliteTable } from "drizzle-orm/sqlite-core"
 
 export const queueNumbers = sqliteTable("queue_numbers", {
   id: integer("id").primaryKey(),
-  studentId: integer("student_id").unique().notNull(),
   courseId: integer("course_id")
     .notNull()
     .references(() => courses.id),

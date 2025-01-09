@@ -26,11 +26,4 @@ const app = new Elysia()
   .use(coordinator)
   .listen(env.PORT)
 
-const res1 = await coordinatorService.findAllCoordinators()
-const res2 = await coordinatorService.findCoordinatorByCourse(CourseNameEnum.BSCS)
-const res3 = await coordinatorService.findCoordinatorStatus(CourseNameEnum.BSCS)
-const res4 = await coordinatorService.updateCoordinatorStatus(CourseNameEnum.BSCS, CoordinatorStatusEnum.AWAY)
-const res5 = await coordinatorService.findAllCoordinators()
-
-console.log(res1, res2, res3, res4, res5)
 console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`)
