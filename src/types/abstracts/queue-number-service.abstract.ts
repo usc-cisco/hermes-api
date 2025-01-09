@@ -1,10 +1,11 @@
 import { QueueNumber } from "../entities/QueueNumber"
-import { CourseIdEnum } from "../enums/CourseIdEnum"
+import { CourseNameEnum } from "../enums/CourseNameEnum"
 
 export type IQueueNumberService = {
-  findByCourse(courseId: CourseIdEnum): Promise<Partial<QueueNumber[]>>
-  findCurrentQueueByCourse(courseId: CourseIdEnum): Promise<QueueNumber>
-  enqueue(courseId: CourseIdEnum): Promise<QueueNumber>
+  findByCourse(courseName: CourseNameEnum): Promise<Partial<QueueNumber[]>>
+  findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<QueueNumber>
+  enqueue(courseName: CourseNameEnum): Promise<QueueNumber>
   dequeue(id: number): Promise<void>
-  reset(): Promise<void>
+  resetAll(): Promise<void>
+  resetByCourse(courseName: CourseNameEnum): Promise<void>
 }

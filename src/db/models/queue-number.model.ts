@@ -1,12 +1,14 @@
 import { courses } from "./courses.model"
 import { InferInsertModel, InferSelectModel } from "drizzle-orm"
-import { integer, sqliteTable } from "drizzle-orm/sqlite-core"
+import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const queueNumbers = sqliteTable("queue_numbers", {
-  id: integer("id").primaryKey(),
-  courseId: integer("course_id")
+  id: integer("id").primaryKey({ autoIncrement: true }),
+  courseName: text("course_name")
     .notNull()
-    .references(() => courses.id),
+    .references(() => courses.courseName, {
+      onDelete: "cascade",
+    }),
   queueNumber: integer("queue_number").notNull(),
 })
 
