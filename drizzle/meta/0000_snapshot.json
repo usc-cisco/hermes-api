@@ -1,7 +1,7 @@
 {
   "version": "6",
   "dialect": "sqlite",
-  "id": "0c98b0ea-667c-43e9-927a-f266db79415c",
+  "id": "96d4edb7-722e-4588-bf74-dbdad08a808d",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "tables": {
     "courses": {
@@ -14,8 +14,8 @@
           "notNull": true,
           "autoincrement": false
         },
-        "name": {
-          "name": "name",
+        "course_name": {
+          "name": "course_name",
           "type": "text",
           "primaryKey": false,
           "notNull": true,
@@ -30,10 +30,10 @@
         }
       },
       "indexes": {
-        "courses_name_unique": {
-          "name": "courses_name_unique",
+        "courses_course_name_unique": {
+          "name": "courses_course_name_unique",
           "columns": [
-            "name"
+            "course_name"
           ],
           "isUnique": true
         }

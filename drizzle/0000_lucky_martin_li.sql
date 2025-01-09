@@ -1,10 +1,10 @@
 CREATE TABLE `courses` (
 	`id` integer PRIMARY KEY NOT NULL,
-	`name` text NOT NULL,
+	`course_name` text NOT NULL,
 	`coordinator_availability` integer NOT NULL
 );
 --> statement-breakpoint
-CREATE UNIQUE INDEX `courses_name_unique` ON `courses` (`name`);--> statement-breakpoint
+CREATE UNIQUE INDEX `courses_course_name_unique` ON `courses` (`course_name`);--> statement-breakpoint
 CREATE TABLE `queue_numbers` (
 	`id` integer PRIMARY KEY NOT NULL,
 	`student_id` integer NOT NULL,
