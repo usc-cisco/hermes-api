@@ -7,7 +7,7 @@
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
     "prepare": "husky",
-    "test": "vitest"
+    "test": "vitest --run --passWithNoTests"
   },
   "dependencies": {
     "@commitlint/cli": "^19.6.1",

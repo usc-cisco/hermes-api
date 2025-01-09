@@ -1,0 +1,25 @@
+name: Build and Test API
+
+on:
+    pull_request:
+        branches:
+            - main
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Get latest code
+              uses: actions/checkout@v4
+
+            - name: Set up Bun
+              uses: oven-sh/setup-bun@v2
+
+            - name: Install dependencies
+              run: bun install
+
+            - name: Build application
+              run: bun build --compile --minify-whitespace --minify-syntax --target bun --outfile server ./src/index.ts
+            
+            - name: Test application
+              run: bun run test
