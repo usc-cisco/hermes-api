@@ -1,5 +1,5 @@
 import { env } from "./config/env.config"
-import { CourseUnion } from "./models/CourseUnion"
+import { coordinator } from "./routers/coordinator.router"
 import { queue } from "./routers/queue.router"
 import { Logger } from "./utils/logger.util"
 import { swagger } from "@elysiajs/swagger"
@@ -18,8 +18,9 @@ const app = new Elysia()
       return "An unexpected error occurred"
     }
   })
-  .use(queue)
   .get("/health", () => "Server is healthy")
+  .use(queue)
+  .use(coordinator)
   .listen(env.PORT)
 
 console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`)
