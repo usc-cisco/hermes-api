@@ -4,6 +4,7 @@
   "module": "src/index.js",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
+    "build": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile server ./src/index.ts",
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
     "prepare": "husky",
