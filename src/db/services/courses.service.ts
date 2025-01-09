@@ -2,7 +2,7 @@ import { db } from ".."
 import { ICoursesService } from "../../types/abstracts/courses-service.abstract"
 import { Course } from "../../types/entities/course"
 import { CourseIdEnum } from "../../types/enums/CourseIdEnum"
-import { courses } from "../models/courses.model"
+import { SelectCourse, courses } from "../models/courses.model"
 import { eq } from "drizzle-orm"
 
 export const coursesService: ICoursesService = {
@@ -12,7 +12,7 @@ export const coursesService: ICoursesService = {
       .from(courses)
       .where(eq(courses.id, course_id))
 
-    const record = records[0]
+    const record: Partial<SelectCourse> = records[0]
 
     return record
   },
@@ -24,7 +24,7 @@ export const coursesService: ICoursesService = {
       .where(eq(courses.id, course_id))
       .returning()
 
-    const record = records[0]
+    const record: SelectCourse = records[0]
 
     return record
   },

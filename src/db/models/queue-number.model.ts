@@ -1,3 +1,4 @@
+import { InferInsertModel, InferSelectModel } from "drizzle-orm"
 import { integer, sqliteTable } from "drizzle-orm/sqlite-core"
 
 export const queueNumbers = sqliteTable("queue_numbers", {
@@ -6,3 +7,6 @@ export const queueNumbers = sqliteTable("queue_numbers", {
   courseId: integer("course_id").notNull(),
   queueNumber: integer("queue_number").notNull(),
 })
+
+export type SelectQueueNumber = InferSelectModel<typeof queueNumbers>
+export type InsertQueueNumber = InferInsertModel<typeof queueNumbers>
