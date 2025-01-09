@@ -12,6 +12,7 @@
   "dependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
+    "@elysiajs/swagger": "^1.2.0",
     "elysia": "latest"
   },
   "devDependencies": {
