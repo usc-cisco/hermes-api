@@ -3,17 +3,17 @@ import { courses } from "../models/courses.model"
 
 await db.insert(courses).values([
   {
-    title: "The Matrix",
-    releaseYear: 1999,
+    course_name: "BSCS",
+    coordinator_availability: true,
   },
   {
-    title: "The Matrix Reloaded",
-    releaseYear: 2003,
+    course_name: "BSIT",
+    coordinator_availability: true,
   },
   {
-    title: "The Matrix Revolutions",
-    releaseYear: 2003,
+    course_name: "BSIS",
+    coordinator_availability: true,
   },
 ])
 
-console.log(`Seeding complete.`)
+console.log(`Courses seeded successfully.`)
