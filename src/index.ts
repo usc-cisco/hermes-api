@@ -1,11 +1,26 @@
-import { db } from "./db"
-import { sql } from "drizzle-orm"
-import { Elysia } from "elysia"
+import { env } from "./config/env.config"
+import { coordinator } from "./routers/coordinator.router"
+import { queue } from "./routers/queue.router"
+import { Logger } from "./utils/logger.util"
+import { swagger } from "@elysiajs/swagger"
+import { Elysia, t } from "elysia"
 
-const query = sql`select "hello world" as text`
-const result = db.get<{ text: string }>(query)
-console.log(result)
+const app = new Elysia()
+  .use(swagger())
+  .onError(({ error, code }) => {
+    Logger.error("The server encountered an error", error)
 
-const app = new Elysia().get("/", () => "Hello Elysia").listen(3000)
+    if (code === "NOT_FOUND") {
+      return "Not found"
+    } else if (code === "VALIDATION") {
+      return error.validator.Errors(error.value).First().message
+    } else {
+      return "An unexpected error occurred"
+    }
+  })
+  .get("/health", () => "Server is healthy")
+  .use(queue)
+  .use(coordinator)
+  .listen(env.PORT)
 
 console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`)
