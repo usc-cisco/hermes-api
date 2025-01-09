@@ -1,6 +1,6 @@
 import { db } from ".."
 import { ICoordinatorService } from "../../types/abstracts/coordinator-service.abstract"
-import { Coordinator } from "../../types/entities/CoordinatorEntity"
+import { Coordinator } from "../../types/entities/Coordinator"
 import type { CoordinatorStatusEnum } from "../../types/enums/CoordinatorStatusEnum"
 import type { CourseNameEnum } from "../../types/enums/CourseNameEnum"
 import { SelectCoordinator, coordinators } from "../models/coordinator.model"

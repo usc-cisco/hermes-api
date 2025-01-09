@@ -1,4 +1,4 @@
-import { Coordinator } from "../entities/CoordinatorEntity"
+import { Coordinator } from "../entities/Coordinator"
 import { CoordinatorStatusEnum } from "../enums/CoordinatorStatusEnum"
 import { CourseNameEnum } from "../enums/CourseNameEnum"
 
