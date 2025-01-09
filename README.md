@@ -39,6 +39,26 @@ Once the environment is ready, start the development server:
 bun dev
 ```
 
+## Setting up the Database with Drizzle and Bun SQLite
+
+### 1. Generate a migration
+
+```sh
+bun run db:migration-generate
+```
+
+### 2. Apply the migration that was just generated
+
+```sh
+bun run db:migrate
+```
+
+### 3. Add placeholder data with seeders
+
+```sh
+bun run db:seed
+```
+
 ## FAQ
 
 1. **Does this work with WSL?**
