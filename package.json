@@ -7,11 +7,15 @@
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
     "prepare": "husky",
-    "test": "vitest"
+    "test": "vitest",
+    "db:migration-generate": "bunx drizzle-kit generate --dialect sqlite --schema ./src/db/models",
+    "db:migrate": "bun run ./src/db/utils/migrate.ts",
+    "db:seed": "bun run ./src/db/utils/seed.ts"
   },
   "dependencies": {
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
+    "@elysiajs/swagger": "^1.2.0",
     "drizzle-orm": "^0.38.3",
     "elysia": "latest",
     "mysql2": "^3.12.0"
