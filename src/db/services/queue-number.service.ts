@@ -1,6 +1,6 @@
 import { db } from ".."
 import { IQueueNumberService } from "../../types/abstracts/queue-number-service.abstract"
-import type { QueueNumber } from "../../types/entities/queue-number"
+import type { QueueNumber } from "../../types/entities/QueueNumberEntity"
 import { CourseIdEnum } from "../../types/enums/CourseIdEnum"
 import { InsertQueueNumber, SelectQueueNumber, queueNumbers } from "../models/queue-number.model"
 import { asc, eq } from "drizzle-orm"

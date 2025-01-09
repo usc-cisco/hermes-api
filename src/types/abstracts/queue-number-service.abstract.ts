@@ -1,4 +1,4 @@
-import { QueueNumber } from "../entities/queue-number"
+import { QueueNumber } from "../entities/QueueNumberEntity"
 import { CourseIdEnum } from "../enums/CourseIdEnum"
 
 export type IQueueNumberService = {
