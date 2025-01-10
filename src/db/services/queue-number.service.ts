@@ -2,8 +2,8 @@ import { db } from ".."
 import { IQueueNumberService } from "../../types/abstracts/queue-number-service.abstract"
 import type { QueueNumber } from "../../types/entities/QueueNumber"
 import { CourseIdEnum } from "../../types/enums/CourseIdEnum"
-import { InsertQueueNumber, SelectQueueNumber, queueNumbers } from "../models/queue-number.model"
-import { asc, eq } from "drizzle-orm"
+import { InsertQueueNumber, queueNumbers } from "../models/queue-number.model"
+import { asc, desc, eq } from "drizzle-orm"
 
 export const queueNumberService: IQueueNumberService = {
   async findByCourse(courseId: CourseIdEnum): Promise<QueueNumber[]> {
@@ -12,17 +12,26 @@ export const queueNumberService: IQueueNumberService = {
     return records
   },
 
-  async findCurrentQueueByCourse(courseId: CourseIdEnum): Promise<QueueNumber> {
-    const records = await db
+  async findCurrentQueueByCourse(courseId: CourseIdEnum): Promise<{ current: number; max: number }> {
+    const currentQueueRecord = await db
       .select()
       .from(queueNumbers)
       .where(eq(queueNumbers.courseId, courseId))
       .orderBy(asc(queueNumbers.queueNumber))
       .limit(1)
 
-    const record: SelectQueueNumber = records[0]
+    const current: number = currentQueueRecord[0].queueNumber
 
-    return record
+    const maxQueueRecord = await db
+      .select()
+      .from(queueNumbers)
+      .where(eq(queueNumbers.courseId, courseId))
+      .orderBy(desc(queueNumbers.queueNumber))
+      .limit(1)
+
+    const max: number = maxQueueRecord[0].queueNumber
+
+    return { current, max }
   },
 
   async enqueue(courseId: CourseIdEnum): Promise<QueueNumber> {
