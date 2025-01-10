@@ -5,13 +5,15 @@ import { Elysia } from "elysia"
 // Expires on EOD time - curr time
 const JWTExpiry = Number(process.env.QUEUE_EXPIRY) - new Date().getHours()
 
+console.log(JWTExpiry + "h")
+
 export const jwtPlugin = new Elysia()
   .use(
     jwt({
       name: "queueJwt",
       schema: JWTModel,
       secret: process.env.JWT_SECRET || "TEST SECRET KEY",
-      exp: JWTExpiry.toString() + "h", // It expires 5pm+
+      exp: JWTExpiry + "h", // It expires 5pm+
       // exp: "1h", // testing
     }),
   )
