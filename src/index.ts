@@ -1,4 +1,5 @@
 import { env } from "./config/env.config"
+import { auth } from "./routers/auth.router"
 import { coordinator } from "./routers/coordinator.router"
 import { queue } from "./routers/queue.router"
 import { Logger } from "./utils/logger.util"
@@ -29,6 +30,7 @@ const app = new Elysia()
   })
   .use(queue)
   .use(coordinator)
+  .use(auth)
   .listen(env.PORT)
 
 console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`)
