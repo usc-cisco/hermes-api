@@ -1,17 +1,18 @@
-import { CourseUnion } from "../types/entities/dtos/CourseUnion"
+import { JWTModel } from "../models/JwtModel"
 import { jwt } from "@elysiajs/jwt"
-import { Elysia, t } from "elysia"
+import { Elysia } from "elysia"
+
+// Expires on EOD time - curr time
+const JWTExpiry = Number(process.env.QUEUE_EXPIRY) - new Date().getHours()
 
 export const jwtPlugin = new Elysia()
   .use(
     jwt({
       name: "queueJwt",
-      schema: t.Object({
-        course: CourseUnion,
-        queueNumber: t.Number(),
-      }),
-      secret: "TEST TEST SECRET",
-      exp: "1h", // Will change to EOD.time - current.time
+      schema: JWTModel,
+      secret: process.env.JWT_SECRET || "TEST SECRET KEY",
+      exp: JWTExpiry.toString() + "h", // It expires 5pm+
+      // exp: "1h", // testing
     }),
   )
   .derive({ as: "global" }, ({ queueJwt }) => {
