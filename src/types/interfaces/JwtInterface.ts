@@ -3,7 +3,7 @@ import { JWTPayloadSpec } from "@elysiajs/jwt"
 import { StatusMap } from "elysia"
 
 export interface QueueJwtPayload extends JWTPayloadSpec {
-  idNumber: number
+  idNumber: string
   course: CourseNameEnum
 }
 

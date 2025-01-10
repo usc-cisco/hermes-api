@@ -33,11 +33,12 @@ export const queueNumberService: IQueueNumberService = {
 
     return { current, max }
   },
-  async enqueue(courseName: CourseNameEnum): Promise<QueueNumber> {
+  async enqueue(courseName: CourseNameEnum, studentId: string): Promise<QueueNumber> {
     const count = await db.$count(queueNumbers, eq(queueNumbers.courseName, courseName))
 
     const data: InsertQueueNumber = {
-      courseName: courseName,
+      studentId,
+      courseName,
       queueNumber: count + 1,
     }
 
