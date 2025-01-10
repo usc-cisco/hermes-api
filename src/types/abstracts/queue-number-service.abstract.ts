@@ -3,9 +3,9 @@ import { CourseNameEnum } from "../enums/CourseNameEnum"
 
 export type IQueueNumberService = {
   findByCourse(courseName: CourseNameEnum): Promise<Partial<QueueNumber[]>>
-  findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<QueueNumber>
+  findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{ current: number; max: number }>
   enqueue(courseName: CourseNameEnum): Promise<QueueNumber>
-  dequeue(id: number): Promise<void>
+  dequeue(courseName: CourseNameEnum): Promise<void>
   resetAll(): Promise<void>
   resetByCourse(courseName: CourseNameEnum): Promise<void>
 }

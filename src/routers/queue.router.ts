@@ -18,9 +18,7 @@ export const queue = new Elysia({ prefix: "/queue" })
     return await queueNumberService.findCurrentQueueByCourse(course)
   })
   .patch("/:course/number/current", async ({ params: { course } }) => {
-    const currentQueueNumber = await queueNumberService.findCurrentQueueByCourse(course)
-
-    return await queueNumberService.dequeue(currentQueueNumber.id)
+    return await queueNumberService.dequeue(course)
   })
   .delete("/:course/reset", ({ params: { course } }) => {
     return queueNumberService.resetByCourse(course)
