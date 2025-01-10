@@ -23,9 +23,7 @@ export const QueueTokenValidation = async (context: AuthMiddlewareContext): Prom
     return { message: "Queue Number Expired or Invalid Token" }
   }
 
-  console.log(context.headers)
-
-  context.headers.queueNumber = validToken.idNumber.toString()
+  context.headers.idNumber = validToken.idNumber.toString()
   context.headers.course = validToken.course
 }
 
