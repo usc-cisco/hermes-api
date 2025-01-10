@@ -22,6 +22,8 @@ const app = new Elysia()
       return "Not found"
     } else if (code === "VALIDATION") {
       return error.validator.Errors(error.value).First().message
+    } else if (code === "BASIC_AUTH_ERROR") {
+      return "Unauthorized"
     } else {
       return "An unexpected error occurred"
     }
