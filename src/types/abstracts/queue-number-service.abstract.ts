@@ -6,7 +6,8 @@ export type IQueueNumberService = {
   findByStudentId(studentId: string): Promise<QueueNumber>
   findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{ current: number; max: number }>
   enqueue(courseName: CourseNameEnum, studentId: string): Promise<QueueNumber>
-  dequeue(courseName: CourseNameEnum): Promise<void>
+  dequeueFront(courseName: CourseNameEnum): Promise<void>
+  dequeueById(studentId: string): Promise<void>
   resetAll(): Promise<void>
   resetByCourse(courseName: CourseNameEnum): Promise<void>
 }
