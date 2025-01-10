@@ -73,7 +73,6 @@ jobs:
             npx pm2 stop hermes-staging
             if [ "$hermes_staging_status" == "errored" ]; then npx pm2 logs hermes-staging; exit 1; fi
             cd ..
-            npx pm2 stop hermes-staging
             npx pm2 stop hermes
             rm hermes
             cp ./staging/hermes .
