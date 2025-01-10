@@ -1,3 +1,4 @@
+import { queueNumberService } from "../db/services/queue-number.service"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import Elysia, { t } from "elysia"
 
@@ -10,15 +11,16 @@ export const queue = new Elysia({ prefix: "/queue" })
   .guard({
     params: "course",
   })
-  .post("/:course/number", ({ params: { course } }) => {
-    return `You are #?? for ${course}`
+  .post("/:course/number", async ({ params: { course } }) => {
+    return await queueNumberService.enqueue(course)
   })
-  .get("/:course/number/current", ({ params: { course } }) => {
-    return `Now serving #?? for ${course}`
+  .get("/:course/number/current", async ({ params: { course } }) => {
+    return await queueNumberService.findCurrentQueueByCourse(course)
   })
-  .patch("/:course/number/current", ({ params: { course } }) => {
-    return `Advanced the queue number for ${course}`
+  .patch("/:course/number/current", async ({ params: { course } }) => {
+    return await queueNumberService.dequeue(course)
   })
-  .post("/:course/reset", ({ params: { course } }) => {
-    return `Cleared the queue for ${course}`
+  .delete("/:course/reset", ({ params: { course } }) => {
+    return queueNumberService.resetByCourse(course)
   })
+  .delete("/reset", () => queueNumberService.resetAll())

@@ -1,5 +1,5 @@
 export type QueueNumber = {
   id: number
-  courseId: number
+  courseName: string
   queueNumber: number
 }
