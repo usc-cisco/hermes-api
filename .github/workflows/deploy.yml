@@ -69,20 +69,15 @@ jobs:
             cd ${{ secrets.DCISM_SUBDOMAIN }}/staging
             chmod +x ./hermes
             npx pm2 start ./hermes --name hermes-staging
-
             sleep 10
-
             hermes_staging_status=$(npx pm2 show hermes-staging | grep 'status' | awk '{print $4}')
             hermes_staging_logs=$(npx pm2 logs hermes-staging)
-
             npx pm2 stop hermes-staging
             npx pm2 remove hermes-staging
-
             if [ "$hermes_staging_status" == "errored" ]; then
               echo "$hermes_staging_logs"
               exit 1
             fi
-
             cd ..
             npx pm2 stop hermes
             rm hermes
