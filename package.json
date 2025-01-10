@@ -3,13 +3,12 @@
   "version": "1.0.50",
   "module": "src/index.js",
   "scripts": {
-    "dev": "bun run --watch src/index.ts",
-    "build": "bun build --compile --minify --target bun --outfile dist/hermes ./src/index.ts",
-    "format": "prettier --write \"./src/**/*.+(ts|json)\"",
-    "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
-    "prepare": "husky",
+    "dev": "bun run --watch ./src/index.ts",
     "test": "vitest --run --passWithNoTests",
-    "db:migration-generate": "bunx drizzle-kit generate --dialect sqlite --schema ./src/db/models",
+    "build": "bun build --compile --minify --target bun --outfile ./dist/hermes ./src/index.ts",
+    "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
+    "format": "prettier --write \"./src/**/*.+(ts|json)\"",
+    "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run ./src/db/utils/migrate.ts",
     "db:seed": "bun run ./src/db/utils/seed.ts"
   },
@@ -26,7 +25,8 @@
     "elysia": "latest",
     "elysia-rate-limit": "^4.1.0",
     "mysql2": "^3.12.0",
-    "pino-pretty": "^13.0.0"
+    "pino-pretty": "^13.0.0",
+    "pm2": "^5.4.3"
   },
   "devDependencies": {
     "@eslint/js": "^9.17.0",
