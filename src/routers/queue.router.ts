@@ -76,9 +76,9 @@ export const queue = new Elysia({ prefix: "/queue" })
     },
   )
 
-  .patch("/admin/:course/number/current", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
+  .patch("/admin/:course/number/current", async ({ params: { course } }: QueueContext) => {
     return await queueNumberService.dequeueFront(course)
   })
-  .delete("/admin/:course/reset", ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
+  .delete("/admin/:course/reset", ({ params: { course } }: QueueContext) => {
     return queueNumberService.resetByCourse(course)
   })

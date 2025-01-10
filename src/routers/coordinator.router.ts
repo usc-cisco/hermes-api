@@ -1,9 +1,29 @@
 import { coordinatorService } from "../db/services/coordinator.service"
+import { CourseValidation, QueueTokenValidation } from "../middleware/authMiddleware"
+import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { StatusUnion } from "../types/entities/dtos/StatusUnion"
+import { CoordinatorStatusEnum } from "../types/enums/CoordinatorStatusEnum"
+import { CourseNameEnum } from "../types/enums/CourseNameEnum"
+import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
 import Elysia, { t } from "elysia"
 
+type CoordinatorContext = {
+  params: {
+    course: CourseNameEnum
+  }
+  body: {
+    status: CoordinatorStatusEnum
+  }
+}
+
 export const coordinator = new Elysia({ prefix: "/coordinator" })
+  .use(
+    basicAuth({
+      credentials: { env: "ADMIN_CREDENTIALS" },
+      scope: "/coordinator/admin",
+    }),
+  )
   .model({
     course: t.Object({
       course: CourseUnion,
@@ -12,16 +32,23 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
       status: StatusUnion,
     }),
   })
+  .use(jwtPlugin)
   .guard({
     params: "course",
   })
-  .get("/:course", async ({ params: { course } }) => {
-    return await coordinatorService.findCoordinatorByCourse(course)
-  })
+  .get(
+    "/:course",
+    async ({ params: { course } }: CoordinatorContext) => {
+      return await coordinatorService.findCoordinatorByCourse(course)
+    },
+    {
+      beforeHandle: [QueueTokenValidation, CourseValidation],
+    },
+  )
   .patch(
-    "/:course/coordinator/status",
-    async ({ params: { course } }) => {
-      return await coordinatorService.findCoordinatorStatus(course)
+    "/admin/:course/coordinator/status",
+    async ({ body, params: { course } }: CoordinatorContext) => {
+      return await coordinatorService.updateCoordinatorStatus(course, body.status)
     },
     {
       body: "newStatus",
