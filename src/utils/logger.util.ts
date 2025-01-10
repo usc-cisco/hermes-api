@@ -1,16 +1,13 @@
 import { env } from "../config/env.config"
-import { createPinoLogger, fileLogger } from "@bogeychan/elysia-logger"
+import { createPinoLogger, fileLogger, logger } from "@bogeychan/elysia-logger"
+import pretty from "pino-pretty"
 
-const transportOptions = {
-  target: "pino-pretty",
-  options: {
-    colorize: true,
-  },
-}
-
-const log = createPinoLogger({
-  transport: transportOptions,
+const stream = pretty({
+  levelFirst: true,
+  colorize: true,
 })
+
+const log = createPinoLogger({ stream })
 
 /**
  * Logger class for logging messages with optional context and data.
@@ -31,11 +28,14 @@ export class Logger {
     this.context = context
   }
 
-  static middleware() {
+  static fileMiddleware() {
     return fileLogger({
       file: env.LOGFILE_NAME,
-      transport: transportOptions,
     })
+  }
+
+  static streamMiddleware() {
+    return logger({ stream })
   }
 
   static log(msg: string, data?: object) {
