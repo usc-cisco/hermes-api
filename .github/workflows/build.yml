@@ -1,25 +1,25 @@
 name: Build and Test API
 
 on:
-    pull_request:
-        branches:
-            - main
+  pull_request:
+    branches:
+      - main
 
 jobs:
-    build:
-        runs-on: ubuntu-latest
-        steps:
-            - name: Get latest code
-              uses: actions/checkout@v4
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Get latest code
+        uses: actions/checkout@v4
 
-            - name: Set up Bun
-              uses: oven-sh/setup-bun@v2
+      - name: Set up Bun
+        uses: oven-sh/setup-bun@v2
 
-            - name: Install dependencies
-              run: bun install --frozen-lockfile
+      - name: Install dependencies
+        run: bun install --frozen-lockfile
 
-            - name: Build application
-              run: bun run build
-            
-            - name: Test application
-              run: bun run test
+      - name: Build application
+        run: bun run build
+
+      - name: Test application
+        run: bun run test
