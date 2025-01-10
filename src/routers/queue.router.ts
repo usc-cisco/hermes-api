@@ -2,6 +2,7 @@ import { queueNumberService } from "../db/services/queue-number.service"
 import { CourseValidation, QueueTokenValidation } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
+import { CourseNameEnum } from "../types/enums/CourseNameEnum"
 import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
 import Elysia, { t } from "elysia"
 
@@ -23,16 +24,16 @@ export const queue = new Elysia({ prefix: "/queue" })
     /** Test Middleware Implementation : applies to all endpoints **/
     beforeHandle: [QueueTokenValidation, CourseValidation],
   })
-  .post("/:course/number", async ({ params: { course } }) => {
+  .post("/:course/number", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
     return await queueNumberService.enqueue(course)
   })
-  .get("/:course/number/current", async ({ params: { course } }) => {
+  .get("/:course/number/current", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
     return await queueNumberService.findCurrentQueueByCourse(course)
   })
-  .patch("/admin/:course/number/current", async ({ params: { course } }) => {
+  .patch("/admin/:course/number/current", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
     return await queueNumberService.dequeue(course)
   })
-  .delete("/admin/:course/reset", ({ params: { course } }) => {
+  .delete("/admin/:course/reset", ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
     return queueNumberService.resetByCourse(course)
   })
   .delete("/admin/reset", () => queueNumberService.resetAll())
