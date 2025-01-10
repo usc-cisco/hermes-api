@@ -1,4 +1,6 @@
 import { queueNumberService } from "../db/services/queue-number.service"
+import { CourseValidation, QueueTokenValidation } from "../middleware/authMiddleware"
+import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import Elysia, { t } from "elysia"
 
@@ -8,8 +10,11 @@ export const queue = new Elysia({ prefix: "/queue" })
       course: CourseUnion,
     }),
   })
+  .use(jwtPlugin)
   .guard({
     params: "course",
+    /** Test Middleware Implementation : applies to all endpoints **/
+    beforeHandle: [QueueTokenValidation, CourseValidation],
   })
   .post("/:course/number", async ({ params: { course } }) => {
     return await queueNumberService.enqueue(course)
