@@ -6,8 +6,10 @@
 
 # production
 /build
+/dist
 
 # misc
+*.exe
 *.pem
 .DS_Store
 Thumbs.db
@@ -24,9 +26,5 @@ Thumbs.db
 **/*.trace
 **/*.zip
 
-*.exe
 # sqlite
 sqlite.db
-
-# drizzle
-drizzle
