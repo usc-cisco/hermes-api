@@ -29,6 +29,22 @@ export const queue = new Elysia({ prefix: "/queue" })
     }),
   })
   .use(jwtPlugin)
+  .delete(
+    "/number",
+    async ({ headers }: QueueContext) => {
+      const studentId = headers.idNumber
+
+      if (!studentId) {
+        return { message: "Student ID not found" }
+      }
+
+      return await queueNumberService.dequeueById(studentId)
+    },
+    {
+      beforeHandle: [QueueTokenValidation],
+    },
+  )
+  .delete("/admin/reset", () => queueNumberService.resetAll())
   .guard({
     params: "course",
   })
@@ -52,17 +68,17 @@ export const queue = new Elysia({ prefix: "/queue" })
   )
   .get(
     "/:course/number/current",
-    async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
+    async ({ params: { course } }: QueueContext) => {
       return await queueNumberService.findCurrentQueueByCourse(course)
     },
     {
       beforeHandle: [QueueTokenValidation, CourseValidation],
     },
   )
+
   .patch("/admin/:course/number/current", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
-    return await queueNumberService.dequeue(course)
+    return await queueNumberService.dequeueFront(course)
   })
   .delete("/admin/:course/reset", ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
     return queueNumberService.resetByCourse(course)
   })
-  .delete("/admin/reset", () => queueNumberService.resetAll())
