@@ -8,7 +8,7 @@ import { Elysia } from "elysia"
 import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
-  .use(rateLimit({ max: 5, duration: 2000, errorResponse: "Rate limit reached" }))
+  .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
   .use(swagger())
   .use(cors())
   .use(Logger.middleware())
