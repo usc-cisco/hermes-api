@@ -7,11 +7,13 @@
 # production
 /build
 /dist
+.htaccess
 
 # misc
 *.exe
 *.pem
 .DS_Store
+.nfs*
 Thumbs.db
 
 # env files
