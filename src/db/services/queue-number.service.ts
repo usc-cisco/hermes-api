@@ -12,6 +12,14 @@ export const queueNumberService: IQueueNumberService = {
     return records
   },
 
+  async findByStudentId(studentId: string): Promise<QueueNumber> {
+    const records = await db.select().from(queueNumbers).where(eq(queueNumbers.studentId, studentId))
+
+    const record: SelectQueueNumber = records[0]
+
+    return record
+  },
+
   async findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{ current: number; max: number }> {
     const currentQueueRecord = await db
       .select()

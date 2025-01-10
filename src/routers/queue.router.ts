@@ -6,6 +6,16 @@ import { CourseNameEnum } from "../types/enums/CourseNameEnum"
 import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
 import Elysia, { t } from "elysia"
 
+type QueueContext = {
+  headers: {
+    idNumber?: string
+    course?: string
+  }
+  params: {
+    course: CourseNameEnum
+  }
+}
+
 export const queue = new Elysia({ prefix: "/queue" })
   .use(
     basicAuth({
@@ -24,8 +34,17 @@ export const queue = new Elysia({ prefix: "/queue" })
   })
   .post(
     "/:course/number",
-    async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
-      return await queueNumberService.enqueue(course, "1")
+    async ({ headers, params: { course } }: QueueContext) => {
+      const studentId = headers.idNumber
+
+      if (!studentId) {
+        return { message: "Student ID not found" }
+      }
+
+      // Check if student already has a queue number
+      if (await queueNumberService.findByStudentId(studentId)) return { message: "Student already has a queue number" }
+
+      return await queueNumberService.enqueue(course, studentId)
     },
     {
       beforeHandle: [QueueTokenValidation, CourseValidation],
