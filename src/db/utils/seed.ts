@@ -5,26 +5,12 @@ import { courses } from "../models/courses.model"
 import { queueNumbers } from "../models/queue-number.model"
 
 // seed courses
-const coursesResult = await db
-  .insert(courses)
-  .values([
-    {
-      courseName: "BSCS",
-    },
-    {
-      courseName: "BSIT",
-    },
-    {
-      courseName: "BSIS",
-    },
-  ])
-  .returning({ id: courses.id })
+await db.insert(courses).values([{ courseName: "BSCS" }, { courseName: "BSIT" }, { courseName: "BSIS" }])
 
 // Seed queue numbers for each course
-const queueData = coursesResult.flatMap((course) => {
+const queueData = ["BSCS", "BSIT", "BSIS"].flatMap((courseName) => {
   return Array.from({ length: 5 }, (_, index) => ({
-    studentId: parseInt(`${course.id}${index + 1}`),
-    courseId: course.id,
+    courseName,
     queueNumber: index + 1,
   }))
 })
