@@ -1,7 +1,7 @@
 import { HttpStatusEnum } from "../types/enums/HttpStatusEnum"
-import { JWTMiddlewareContext, QueueJwtPayload } from "../types/interfaces/JwtInterface"
+import { AuthMiddlewareContext, QueueJwtPayload } from "../types/interfaces/JwtInterface"
 
-export const QueueTokenValidation = async (context: JWTMiddlewareContext): Promise<void | { message: string }> => {
+export const QueueTokenValidation = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
   const { authorization } = context.headers as { authorization?: string }
 
   if (!authorization) {
@@ -20,13 +20,24 @@ export const QueueTokenValidation = async (context: JWTMiddlewareContext): Promi
 
   if (!validToken) {
     context.set.status = HttpStatusEnum.UNAUTHORIZED
-    return { message: "Queue Number Expired" }
+    return { message: "Queue Number Expired or Invalid Token" }
   }
 
-  context.headers.queueNumber = validToken.queueNumber.toString()
+  context.headers.queueNumber = validToken.idNumber.toString()
   context.headers.course = validToken.course
 }
 
-// export const CourseValidation = async (context : JWTMiddlewareContext): Promise<void | { message: string } > => {
+// Validate if the user's requested course is equal to his registered queue course
+export const CourseValidation = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
+  const { course: headerCourse } = context.headers as { course?: string }
 
-// }
+  if (!headerCourse) {
+    context.set.status = HttpStatusEnum.BAD_REQUEST
+    return { message: "Course header is required" }
+  }
+
+  if (headerCourse !== context.params.course) {
+    context.set.status = HttpStatusEnum.UNAUTHORIZED
+    return { message: `You are not authorized to access ${context.params.course}` }
+  }
+}
