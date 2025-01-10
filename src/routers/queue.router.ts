@@ -25,7 +25,7 @@ export const queue = new Elysia({ prefix: "/queue" })
   .post(
     "/:course/number",
     async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
-      return await queueNumberService.enqueue(course)
+      return await queueNumberService.enqueue(course, "1")
     },
     {
       beforeHandle: [QueueTokenValidation, CourseValidation],

@@ -4,6 +4,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const queueNumbers = sqliteTable("queue_numbers", {
   id: integer("id").primaryKey({ autoIncrement: true }),
+  studentId: text("student_id").notNull(),
   courseName: text("course_name")
     .notNull()
     .references(() => courses.courseName, {
