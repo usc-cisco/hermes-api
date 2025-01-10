@@ -20,7 +20,7 @@ export const queueNumberService: IQueueNumberService = {
       .orderBy(asc(queueNumbers.queueNumber))
       .limit(1)
 
-    const current: number = currentQueueRecord[0].queueNumber
+    const current: number = currentQueueRecord.length ? currentQueueRecord[0].queueNumber : 0
 
     const maxQueueRecord = await db
       .select()
@@ -29,7 +29,7 @@ export const queueNumberService: IQueueNumberService = {
       .orderBy(desc(queueNumbers.queueNumber))
       .limit(1)
 
-    const max: number = maxQueueRecord[0].queueNumber
+    const max: number = maxQueueRecord.length ? maxQueueRecord[0].queueNumber : 0
 
     return { current, max }
   },
