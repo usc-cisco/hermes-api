@@ -21,7 +21,6 @@ export const queue = new Elysia({ prefix: "/queue" })
   .use(jwtPlugin)
   .guard({
     params: "course",
-    /** Test Middleware Implementation : applies to all endpoints **/
     beforeHandle: [QueueTokenValidation, CourseValidation],
   })
   .post("/:course/number", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
