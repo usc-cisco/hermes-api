@@ -24,6 +24,7 @@ Thumbs.db
 **/*.trace
 **/*.zip
 
+*.exe
 # sqlite
 sqlite.db
 
