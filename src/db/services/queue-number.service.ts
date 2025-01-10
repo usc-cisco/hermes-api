@@ -3,7 +3,7 @@ import { IQueueNumberService } from "../../types/abstracts/queue-number-service.
 import type { QueueNumber } from "../../types/entities/QueueNumber"
 import type { CourseNameEnum } from "../../types/enums/CourseNameEnum"
 import { InsertQueueNumber, SelectQueueNumber, queueNumbers } from "../models/queue-number.model"
-import { asc, eq } from "drizzle-orm"
+import { asc, desc, eq } from "drizzle-orm"
 
 export const queueNumberService: IQueueNumberService = {
   async findByCourse(courseName: CourseNameEnum): Promise<QueueNumber[]> {
@@ -12,19 +12,27 @@ export const queueNumberService: IQueueNumberService = {
     return records
   },
 
-  async findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<QueueNumber> {
-    const records = await db
+  async findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{ current: number; max: number }> {
+    const currentQueueRecord = await db
       .select()
       .from(queueNumbers)
       .where(eq(queueNumbers.courseName, courseName))
       .orderBy(asc(queueNumbers.queueNumber))
       .limit(1)
 
-    const record: SelectQueueNumber = records[0]
+    const current: number = currentQueueRecord[0].queueNumber
 
-    return record
+    const maxQueueRecord = await db
+      .select()
+      .from(queueNumbers)
+      .where(eq(queueNumbers.courseName, courseName))
+      .orderBy(desc(queueNumbers.queueNumber))
+      .limit(1)
+
+    const max: number = maxQueueRecord[0].queueNumber
+
+    return { current, max }
   },
-
   async enqueue(courseName: CourseNameEnum): Promise<QueueNumber> {
     const count = await db.$count(queueNumbers, eq(queueNumbers.courseName, courseName))
 
@@ -39,8 +47,17 @@ export const queueNumberService: IQueueNumberService = {
     return record
   },
 
-  async dequeue(id: number): Promise<void> {
-    await db.delete(queueNumbers).where(eq(queueNumbers.id, id))
+  async dequeue(courseName: CourseNameEnum): Promise<void> {
+    const currentQueueRecord = await db
+      .select()
+      .from(queueNumbers)
+      .where(eq(queueNumbers.courseName, courseName))
+      .orderBy(asc(queueNumbers.queueNumber))
+      .limit(1)
+
+    const current: SelectQueueNumber = currentQueueRecord[0]
+
+    await db.delete(queueNumbers).where(eq(queueNumbers.id, current.id))
   },
 
   async resetAll(): Promise<void> {
