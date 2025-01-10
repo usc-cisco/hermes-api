@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - ci/gh-action-fix-pipeline-error-handling-27 # test
 
 jobs:
   build:
