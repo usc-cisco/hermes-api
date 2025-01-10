@@ -21,14 +21,25 @@ export const queue = new Elysia({ prefix: "/queue" })
   .use(jwtPlugin)
   .guard({
     params: "course",
-    beforeHandle: [QueueTokenValidation, CourseValidation],
   })
-  .post("/:course/number", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
-    return await queueNumberService.enqueue(course)
-  })
-  .get("/:course/number/current", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
-    return await queueNumberService.findCurrentQueueByCourse(course)
-  })
+  .post(
+    "/:course/number",
+    async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
+      return await queueNumberService.enqueue(course)
+    },
+    {
+      beforeHandle: [QueueTokenValidation, CourseValidation],
+    },
+  )
+  .get(
+    "/:course/number/current",
+    async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
+      return await queueNumberService.findCurrentQueueByCourse(course)
+    },
+    {
+      beforeHandle: [QueueTokenValidation, CourseValidation],
+    },
+  )
   .patch("/admin/:course/number/current", async ({ params: { course } }: { params: { course: CourseNameEnum } }) => {
     return await queueNumberService.dequeue(course)
   })
