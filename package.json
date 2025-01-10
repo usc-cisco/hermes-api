@@ -4,7 +4,7 @@
   "module": "src/index.js",
   "scripts": {
     "dev": "bun run --watch src/index.ts",
-    "build": "bun build --compile --minify-whitespace --minify-syntax --target bun --outfile server ./src/index.ts",
+    "build": "bun build --compile --minify --target bun --outfile dist/hermes ./src/index.ts",
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "lint": "eslint --fix --no-error-on-unmatched-pattern ./src/**/*.ts",
     "prepare": "husky",
@@ -20,6 +20,7 @@
     "@eelkevdbos/elysia-basic-auth": "^2.0.0",
     "@elysiajs/bearer": "^1.2.0",
     "@elysiajs/cors": "^1.2.0",
+    "@elysiajs/jwt": "^1.2.0",
     "@elysiajs/swagger": "^1.2.0",
     "drizzle-orm": "^0.38.3",
     "elysia": "latest",
