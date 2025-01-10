@@ -29,9 +29,3 @@ export const queue = new Elysia({ prefix: "/queue" })
     return queueNumberService.resetByCourse(course)
   })
   .delete("/reset", () => queueNumberService.resetAll())
-
-// .delete("/:course/reset", ({ params: { course } }) => {
-//   return queueNumberService.resetByCourse(course)
-// },{              // This M.W. applies to this endpoint only
-//   beforeHandle: [QueueTokenValidation, CourseValidation]
-// })

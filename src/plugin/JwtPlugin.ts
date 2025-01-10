@@ -1,11 +1,9 @@
-import { JWTModel } from "../models/JwtModel"
+import { JWTModel } from "../types/entities/dtos/JwtModel"
 import { jwt } from "@elysiajs/jwt"
 import { Elysia } from "elysia"
 
 // Expires on EOD time - curr time
 const JWTExpiry = Number(process.env.QUEUE_EXPIRY) - new Date().getHours()
-
-console.log(JWTExpiry + "h")
 
 export const jwtPlugin = new Elysia()
   .use(
