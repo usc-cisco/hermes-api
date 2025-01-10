@@ -22,11 +22,11 @@ jobs:
           port: ${{ secrets.DCISM_PORT }}
           script: |
             cd ${{ secrets.DCISM_SUBDOMAIN }}
-            git pull origin main
+            git reset --hard && git clean -fd && git pull origin main
             bun install
             bun run db:generate
             bun run db:migrate
-            npx pm2 stop hermes
+            bun pm2 stop hermes
             bun run build
             chmod +x ./dist/hermes
-            npx pm2 restart hermes
+            bun pm2 restart hermes
