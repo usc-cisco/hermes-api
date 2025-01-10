@@ -9,9 +9,11 @@ import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
   .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
+  .get("/health", () => "Server is healthy")
   .use(swagger())
   .use(cors())
-  .use(Logger.middleware())
+  .use(Logger.fileMiddleware())
+  .use(Logger.streamMiddleware())
   .onError(({ error, code }) => {
     Logger.error("The server encountered an error", error)
 
@@ -23,7 +25,6 @@ const app = new Elysia()
       return "An unexpected error occurred"
     }
   })
-  .get("/health", () => "Server is healthy")
   .use(queue)
   .use(coordinator)
   .listen(env.PORT)
