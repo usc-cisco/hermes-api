@@ -21,7 +21,8 @@ export const auth = new Elysia({ prefix: "/auth" })
     {
       async beforeHandle(context): Promise<void | { message: string }> {
         if (context.headers.authorization) {
-          const token = context.headers.authorization
+          const token = context.headers.authorization.split(" ")[1]
+
           const validToken = await context.queueJwt.verify(token)
 
           if (validToken) {
