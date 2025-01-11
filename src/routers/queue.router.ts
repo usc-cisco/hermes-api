@@ -1,5 +1,5 @@
 import { queueNumberService } from "../db/services/queue-number.service"
-import { validateQueueToken } from "../middleware/authMiddleware"
+import { validateCourse, validateQueueToken } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CourseNameEnum } from "../types/enums/CourseNameEnum"
@@ -173,7 +173,7 @@ export const queue = new Elysia({ prefix: "/queue" })
     },
     {
       params: "course",
-      beforeHandle: [validateQueueToken],
+      beforeHandle: [validateQueueToken, validateCourse],
       tags: ["Queue"],
       detail: {
         description: "Creates a queue number and associates the JWT student ID with it.",
@@ -213,6 +213,9 @@ export const queue = new Elysia({ prefix: "/queue" })
           },
           "400": {
             description: "Student already has a queue number.",
+          },
+          "401": {
+            description: "Student's is incorrectly trying to join another course's queue.",
           },
         },
       },
