@@ -21,7 +21,7 @@ export interface AuthMiddlewareContext extends JwtInterface {
   headers: Record<string, string | undefined>
   params: Record<string, string | undefined>
   body: {
-    idNumber?: string
-    course?: CourseNameEnum
+    idNumber: string
+    course: CourseNameEnum
   }
 }
