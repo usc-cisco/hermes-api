@@ -1,6 +1,4 @@
 import { coordinatorService } from "../db/services/coordinator.service"
-import { CourseValidation, QueueTokenValidation } from "../middleware/authMiddleware"
-import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { StatusUnion } from "../types/entities/dtos/StatusUnion"
 import { CoordinatorStatusEnum } from "../types/enums/CoordinatorStatusEnum"
@@ -32,19 +30,12 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
       status: StatusUnion,
     }),
   })
-  .use(jwtPlugin)
   .guard({
     params: "course",
   })
-  .get(
-    "/:course",
-    async ({ params: { course } }: CoordinatorContext) => {
-      return await coordinatorService.findCoordinatorByCourse(course)
-    },
-    {
-      beforeHandle: [QueueTokenValidation, CourseValidation],
-    },
-  )
+  .get("/:course", async ({ params: { course } }: CoordinatorContext) => {
+    return await coordinatorService.findCoordinatorByCourse(course)
+  })
   .patch(
     "/admin/:course/coordinator/status",
     async ({ body, params: { course } }: CoordinatorContext) => {

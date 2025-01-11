@@ -1,5 +1,5 @@
 import { queueNumberService } from "../db/services/queue-number.service"
-import { CourseValidation, QueueTokenValidation } from "../middleware/authMiddleware"
+import { validateQueueToken } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CourseNameEnum } from "../types/enums/CourseNameEnum"
@@ -23,21 +23,16 @@ export const queue = new Elysia({ prefix: "/queue" })
       scope: "/queue/admin",
     }),
   )
+  .use(jwtPlugin)
   .model({
     course: t.Object({
       course: CourseUnion,
     }),
   })
-  .get(
-    "/:course/number/current",
-    async ({ params: { course } }: QueueContext) => {
-      return await queueNumberService.findCurrentQueueByCourse(course)
-    },
-    {
-      beforeHandle: [QueueTokenValidation, CourseValidation],
-    },
-  )
-  .use(jwtPlugin)
+  .guard({
+    params: "course",
+  })
+  .delete("/admin/reset", () => queueNumberService.resetAll())
   .delete(
     "/number",
     async ({ headers }: QueueContext) => {
@@ -50,12 +45,11 @@ export const queue = new Elysia({ prefix: "/queue" })
       return await queueNumberService.dequeueById(studentId)
     },
     {
-      beforeHandle: [QueueTokenValidation],
+      beforeHandle: [validateQueueToken],
     },
   )
-  .delete("/admin/reset", () => queueNumberService.resetAll())
-  .guard({
-    params: "course",
+  .get("/:course/number/current", async ({ params: { course } }: QueueContext) => {
+    return await queueNumberService.findCurrentQueueByCourse(course)
   })
   .post(
     "/:course/number",
@@ -72,10 +66,9 @@ export const queue = new Elysia({ prefix: "/queue" })
       return await queueNumberService.enqueue(course, studentId)
     },
     {
-      beforeHandle: [QueueTokenValidation, CourseValidation],
+      beforeHandle: [validateQueueToken],
     },
   )
-
   .patch("/admin/:course/number/current", async ({ params: { course } }: QueueContext) => {
     return await queueNumberService.dequeueFront(course)
   })
