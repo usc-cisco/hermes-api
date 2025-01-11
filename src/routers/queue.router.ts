@@ -3,6 +3,7 @@ import { validateQueueToken } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CourseNameEnum } from "../types/enums/CourseNameEnum"
+import { Logger } from "../utils/logger.util"
 import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
 import Elysia, { error, t } from "elysia"
 
@@ -29,9 +30,6 @@ export const queue = new Elysia({ prefix: "/queue" })
       course: CourseUnion,
     }),
   })
-  .guard({
-    params: "course",
-  })
   .delete("/admin/reset", () => queueNumberService.resetAll(), {
     tags: ["Queue"],
     detail: {
@@ -39,7 +37,7 @@ export const queue = new Elysia({ prefix: "/queue" })
     },
   })
   .delete(
-    "/:course/number",
+    "/number",
     async ({ headers }: QueueContext) => {
       const studentId = headers.idNumber
 
@@ -66,11 +64,71 @@ export const queue = new Elysia({ prefix: "/queue" })
     },
   )
   .get(
+    "/number",
+    async ({ headers }: QueueContext) => {
+      const studentId = headers.idNumber
+      Logger.warn("Student id is " + studentId)
+
+      if (!studentId) {
+        return error(400, "Student ID not found")
+      }
+
+      const queueNumber = await queueNumberService.findByStudentId(studentId)
+
+      if (!queueNumber) {
+        return error(404, "No queue number found")
+      }
+
+      return queueNumber
+    },
+    {
+      beforeHandle: [validateQueueToken],
+      tags: ["Queue"],
+      detail: {
+        description: "Gets the queue number of a student.",
+        responses: {
+          "404": {
+            description: "The student does not currently have a queue number.",
+          },
+          "200": {
+            description: "Successfully fetched the student's queue number.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "The queue number SQL id. Not important.",
+                    },
+                    studentId: {
+                      type: "string",
+                      description: "The studentId associated with the queue number.",
+                    },
+                    courseName: {
+                      type: "string",
+                      description: "The queue number's course (ie. BSCS, BSIT, BSIS).",
+                    },
+                    queueNumber: {
+                      type: "number",
+                      description: "The queue number.",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  )
+  .get(
     "/:course/number/current",
     async ({ params: { course } }: QueueContext) => {
       return await queueNumberService.findCurrentQueueByCourse(course)
     },
     {
+      params: "course",
       tags: ["Queue"],
       detail: {
         description: "Gets the queue status of a course.",
@@ -105,7 +163,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       const studentId = headers.idNumber
 
       if (!studentId) {
-        return { message: "Student ID not found" }
+        return error(404, "Student ID not found")
       }
 
       // Check if student already has a queue number
@@ -114,6 +172,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       return await queueNumberService.enqueue(course, studentId)
     },
     {
+      params: "course",
       beforeHandle: [validateQueueToken],
       tags: ["Queue"],
       detail: {
@@ -165,6 +224,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       return await queueNumberService.dequeueFront(course)
     },
     {
+      params: "course",
       tags: ["Queue"],
       detail: {
         description: "Moves the queue forward by dequeuing the currently being served number.",
@@ -182,6 +242,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       return queueNumberService.resetByCourse(course)
     },
     {
+      params: "course",
       tags: ["Queue"],
       detail: {
         description: "Resets the queue of a course.",
