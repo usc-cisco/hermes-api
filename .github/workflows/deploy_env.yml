@@ -2,11 +2,9 @@ name: Deploy new environment variables
 
 on:
     workflow_dispatch:
-    
     push:
         branches:
             - main
-            - bs--env-update-workflow
 
 jobs:
     # This job will automatically overwrite the .env file in the server
