@@ -228,11 +228,24 @@ export const queue = new Elysia({ prefix: "/queue" })
       tags: ["Queue"],
       detail: {
         description: "Moves the queue forward by dequeuing the currently being served number.",
+        requestBody: {
+          required: false,
+          description: "No request body required. (!) Make sure to select None as the body type.",
+          content: {},
+        },
         security: [
           {
             basicAuth: [],
           },
         ],
+        responses: {
+          "200": {
+            description: "Successfully advanced the queue.",
+          },
+          "404": {
+            description: "Course used in :course parameter was not found.",
+          },
+        },
       },
     },
   )
@@ -251,6 +264,16 @@ export const queue = new Elysia({ prefix: "/queue" })
             basicAuth: [],
           },
         ],
+        requestBody: {
+          required: false,
+          description: "No request body required. (!) Make sure to select None as the body type.",
+          content: {},
+        },
+        responses: {
+          "200": {
+            description: "Successfully reset the course's queue.",
+          },
+        },
       },
     },
   )
