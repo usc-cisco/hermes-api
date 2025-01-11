@@ -17,6 +17,7 @@ jobs:
                 echo "ADMIN_CREDENTIALS=${{ secrets.ADMIN_CREDENTIALS }}" >> .env
                 echo "QUEUE_EXPIRY=${{ secrets.QUEUE_EXPIRY }}" >> .env
                 echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+                echo "HELLO" >> .env
             
             - name: Deploy file
               uses: appleboy/scp-action@v0.1.7
@@ -26,4 +27,4 @@ jobs:
                 password: ${{ secrets.DCISM_PASSWORD }}
                 port: ${{ secrets.DCISM_PORT }}
                 source: ".env"
-                target: "./"
+                target: "${{ secrets.DCISM_SUBDOMAIN }}"
