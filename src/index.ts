@@ -40,7 +40,12 @@ const app = new Elysia()
       },
     }),
   )
-  .use(cors())
+  .use(
+    cors({
+      origin: true,
+      methods: ["GET", "PATCH", "DELETE", "POST", "PUT"],
+    }),
+  )
   .use(Logger.fileMiddleware())
   .use(Logger.streamMiddleware())
   .onError(({ error, code }) => {
