@@ -12,6 +12,14 @@ export const queueNumberService: IQueueNumberService = {
     return records
   },
 
+  async findByStudentId(studentId: string): Promise<QueueNumber> {
+    const records = await db.select().from(queueNumbers).where(eq(queueNumbers.studentId, studentId))
+
+    const record: SelectQueueNumber = records[0]
+
+    return record
+  },
+
   async findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{ current: number; max: number }> {
     const currentQueueRecord = await db
       .select()
@@ -33,11 +41,12 @@ export const queueNumberService: IQueueNumberService = {
 
     return { current, max }
   },
-  async enqueue(courseName: CourseNameEnum): Promise<QueueNumber> {
+  async enqueue(courseName: CourseNameEnum, studentId: string): Promise<QueueNumber> {
     const count = await db.$count(queueNumbers, eq(queueNumbers.courseName, courseName))
 
     const data: InsertQueueNumber = {
-      courseName: courseName,
+      studentId,
+      courseName,
       queueNumber: count + 1,
     }
 
@@ -47,7 +56,7 @@ export const queueNumberService: IQueueNumberService = {
     return record
   },
 
-  async dequeue(courseName: CourseNameEnum): Promise<void> {
+  async dequeueFront(courseName: CourseNameEnum): Promise<void> {
     const currentQueueRecord = await db
       .select()
       .from(queueNumbers)
@@ -58,6 +67,10 @@ export const queueNumberService: IQueueNumberService = {
     const current: SelectQueueNumber = currentQueueRecord[0]
 
     await db.delete(queueNumbers).where(eq(queueNumbers.id, current.id))
+  },
+
+  async dequeueById(studentId: string): Promise<void> {
+    await db.delete(queueNumbers).where(eq(queueNumbers.studentId, studentId))
   },
 
   async resetAll(): Promise<void> {
