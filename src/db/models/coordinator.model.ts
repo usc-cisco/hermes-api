@@ -9,6 +9,7 @@ export const coordinators = sqliteTable("coordinators", {
     .notNull()
     .references(() => courses.courseName),
   status: text("status").notNull(),
+  email: text("email").notNull(),
 })
 
 export type SelectCoordinator = InferSelectModel<typeof coordinators>
