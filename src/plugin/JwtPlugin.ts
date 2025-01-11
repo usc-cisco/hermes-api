@@ -11,8 +11,8 @@ export const jwtPlugin = new Elysia()
       name: "queueJwt",
       schema: JWTModel,
       secret: process.env.JWT_SECRET || "TEST SECRET KEY",
-      exp: JWTExpiry + "h", // It expires 5pm+
-      // exp: "1h", // testing
+      // exp: JWTExpiry + "h", // It expires 5pm+
+      exp: "1h", // testing
     }),
   )
   .derive({ as: "global" }, ({ queueJwt }) => {
