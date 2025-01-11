@@ -44,6 +44,8 @@ const app = new Elysia()
     cors({
       origin: true,
       methods: ["GET", "PATCH", "DELETE", "POST", "PUT"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
     }),
   )
   .use(Logger.fileMiddleware())
