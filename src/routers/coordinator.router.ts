@@ -33,9 +33,15 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
   .guard({
     params: "course",
   })
-  .get("/:course", async ({ params: { course } }: CoordinatorContext) => {
-    return await coordinatorService.findCoordinatorByCourse(course)
-  })
+  .get(
+    "/:course",
+    async ({ params: { course } }: CoordinatorContext) => {
+      return await coordinatorService.findCoordinatorByCourse(course)
+    },
+    {
+      tags: ["Coordinator"],
+    },
+  )
   .patch(
     "/admin/:course/coordinator/status",
     async ({ body, params: { course } }: CoordinatorContext) => {
@@ -43,5 +49,6 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
     },
     {
       body: "newStatus",
+      tags: ["Coordinator"],
     },
   )
