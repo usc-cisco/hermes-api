@@ -14,12 +14,29 @@ const app = new Elysia()
   .use(
     swagger({
       documentation: {
+        info: {
+          title: "Hermes API Documentation",
+          version: "0.0.1-beta",
+        },
         tags: [
           { name: "Coordinator", description: "Methods related to viewing coordinator status & editing it" },
           { name: "Queue", description: "Methods related to interacting with the queue" },
           { name: "Auth", description: "Authentication endpoints" },
           { name: "Debug", description: "Routes for debugging" },
         ],
+        components: {
+          securitySchemes: {
+            bearerAuth: {
+              type: "http",
+              scheme: "bearer",
+              bearerFormat: "JWT",
+            },
+            basicAuth: {
+              type: "http",
+              scheme: "basic",
+            },
+          },
+        },
       },
     }),
   )
