@@ -18,7 +18,7 @@ jobs:
                 echo "ADMIN_CREDENTIALS=${{ secrets.ADMIN_CREDENTIALS }}" >> .env
                 echo "QUEUE_EXPIRY=${{ secrets.QUEUE_EXPIRY }}" >> .env
                 echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-                echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> .env
+                echo "PORT=${{ secrets.SERVER_PORT }}" >> .env
             
             - name: Deploy file
               uses: appleboy/scp-action@v0.1.7
