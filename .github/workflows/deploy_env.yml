@@ -2,6 +2,10 @@ name: Deploy new environment variables
 
 on:
     workflow_dispatch:
+    
+    push:
+        branches:
+            - bs--env-update-workflow
 
 jobs:
     deploy:
