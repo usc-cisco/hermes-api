@@ -10,7 +10,8 @@
     "format": "prettier --write \"./src/**/*.+(ts|json)\"",
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run ./src/db/utils/migrate.ts",
-    "db:seed": "bun run ./src/db/utils/seed.ts"
+    "db:seed": "bun run ./src/db/utils/seed.ts",
+    "db:init": "bun run db:generate && db:migrate && db:seed"
   },
   "dependencies": {
     "@bogeychan/elysia-logger": "^0.1.7",

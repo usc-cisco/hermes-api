@@ -56,16 +56,19 @@ async function seedDatabase() {
         name: "Doriz Roa",
         courseName: "BSCS",
         status: CoordinatorStatusEnum.AVAILABLE,
+        email: "drroa@usc.edu.ph",
       },
       {
         name: "Gran Sabandal",
         courseName: "BSIT",
         status: CoordinatorStatusEnum.AVAILABLE,
+        email: "ggsabandal@usc.edu.ph",
       },
       {
         name: "Glenn Pepito",
         courseName: "BSIS",
         status: CoordinatorStatusEnum.AVAILABLE,
+        email: "gbpepito@usc.edu.ph",
       },
     ])
     console.log("Seeded coordinators")
