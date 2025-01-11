@@ -1,0 +1,25 @@
+name: Deploy new environment variables
+
+on:
+    workflow_dispatch:
+
+jobs:
+    deploy:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Generate file
+              run: |
+                touch .env
+                echo "ADMIN_CREDENTIALS=${{ secrets.ADMIN_CREDENTIALS }}" >> .env
+                echo "QUEUE_EXPIRY=${{ secrets.QUEUE_EXPIRY }}" >> .env
+                echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+            
+            - name: Deploy file
+              uses: appleboy/scp-action@v0.1.7
+              with:
+                host: ${{ secrets.DCISM_HOST }}
+                username: ${{ secrets.DCISM_USERNAME }}
+                password: ${{ secrets.DCISM_PASSWORD }}
+                port: ${{ secrets.DCISM_PORT }}
+                source: ".env"
+                target: "./"
