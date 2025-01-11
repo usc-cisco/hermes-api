@@ -7,14 +7,14 @@ export interface QueueJwtPayload extends JWTPayloadSpec {
   course: CourseNameEnum
 }
 
-export interface JWTInterface {
+export interface JwtInterface {
   queueJwt: {
     sign: (payload: QueueJwtPayload & JWTPayloadSpec) => Promise<string>
     verify: (payload: string) => Promise<JWTPayloadSpec | false>
   }
 }
 
-export interface AuthMiddlewareContext extends JWTInterface {
+export interface AuthMiddlewareContext extends JwtInterface {
   set: {
     status?: number | keyof StatusMap
   }

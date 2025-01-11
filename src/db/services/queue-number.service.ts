@@ -64,6 +64,11 @@ export const queueNumberService: IQueueNumberService = {
       .orderBy(asc(queueNumbers.queueNumber))
       .limit(1)
 
+    if (!currentQueueRecord) {
+      // Don't do anything if no queue numbers exists
+      return
+    }
+
     const current: SelectQueueNumber = currentQueueRecord[0]
 
     await db.delete(queueNumbers).where(eq(queueNumbers.id, current.id))

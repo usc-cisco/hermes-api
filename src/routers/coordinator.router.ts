@@ -1,6 +1,4 @@
 import { coordinatorService } from "../db/services/coordinator.service"
-import { CourseValidation, QueueTokenValidation } from "../middleware/authMiddleware"
-import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { StatusUnion } from "../types/entities/dtos/StatusUnion"
 import { CoordinatorStatusEnum } from "../types/enums/CoordinatorStatusEnum"
@@ -32,7 +30,6 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
       status: StatusUnion,
     }),
   })
-  .use(jwtPlugin)
   .guard({
     params: "course",
   })
@@ -42,15 +39,82 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
       return await coordinatorService.findCoordinatorByCourse(course)
     },
     {
-      beforeHandle: [QueueTokenValidation, CourseValidation],
+      tags: ["Coordinator"],
+      detail: {
+        description: "Gets the coordinator info & status of a specified course.",
+        responses: {
+          "200": {
+            description: "Successfully fetched the student's queue number.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "The teacher's id. Not important.",
+                    },
+                    name: {
+                      type: "string",
+                      description: "The name of the coordinator.",
+                    },
+                    courseName: {
+                      type: "string",
+                      description: "CourseNameEnum (ie. BSCS | BSIT | BSIS)",
+                    },
+                    queueNumber: {
+                      type: "string",
+                      description: "CoordinatorStatusEnum (ie. available | away | unavailable)",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   )
   .patch(
-    "/admin/:course/coordinator/status",
+    "/admin/:course/status",
     async ({ body, params: { course } }: CoordinatorContext) => {
       return await coordinatorService.updateCoordinatorStatus(course, body.status)
     },
     {
       body: "newStatus",
+      tags: ["Coordinator"],
+      detail: {
+        description: "Updates the coordinator status of a specified course.",
+        responses: {
+          "200": {
+            description: "Successfully updated the coordinator's status.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "The teacher's id. Not important.",
+                    },
+                    name: {
+                      type: "string",
+                      description: "The name of the coordinator.",
+                    },
+                    courseName: {
+                      type: "string",
+                      description: "CourseNameEnum (ie. BSCS | BSIT | BSIS)",
+                    },
+                    queueNumber: {
+                      type: "string",
+                      description: "CoordinatorStatusEnum (ie. available | away | unavailable)",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   )

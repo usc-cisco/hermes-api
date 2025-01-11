@@ -1,13 +1,13 @@
 import { studentService } from "../db/services/student.service"
 import { jwtPlugin } from "../plugin/JwtPlugin"
-import { GetAuthQueueToken } from "../services/auth.service"
-import { JWTModel } from "../types/entities/dtos/JwtModel"
+import { getAuthToken } from "../services/auth.service"
+import { JwtModel } from "../types/entities/dtos/JwtModel"
 import { HttpStatusEnum } from "../types/enums/HttpStatusEnum"
 import Elysia from "elysia"
 
 export const auth = new Elysia({ prefix: "/auth" })
   .model({
-    JWTModel,
+    JwtModel,
   })
   .use(jwtPlugin)
   .post(
@@ -26,12 +26,50 @@ export const auth = new Elysia({ prefix: "/auth" })
       }
 
       set.status = HttpStatusEnum.CREATED
-      const token = await GetAuthQueueToken(queueJwt, body)
+      const token = await getAuthToken(queueJwt, body)
       return {
         token,
       }
     },
     {
-      body: JWTModel,
+      body: JwtModel,
+      detail: {
+        tags: ["Auth"],
+        description: "Use this to validate a student ID and create a JWT for validateQueueToken routes",
+        responses: {
+          "201": {
+            description: "JWT successfully created.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    token: {
+                      type: "string",
+                      description: "The generated JWT token.",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request. Missing or invalid parameters, or student not found.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    message: {
+                      type: "string",
+                      description: "Error message describing the issue.",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   )

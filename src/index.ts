@@ -10,8 +10,19 @@ import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
   .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
-  .get("/health", () => "Server is healthy")
-  .use(swagger())
+  .get("/health", () => "Server is healthy", { tags: ["Debug"], detail: { description: "Used for health checks." } })
+  .use(
+    swagger({
+      documentation: {
+        tags: [
+          { name: "Coordinator", description: "Methods related to viewing coordinator status & editing it" },
+          { name: "Queue", description: "Methods related to interacting with the queue" },
+          { name: "Auth", description: "Authentication endpoints" },
+          { name: "Debug", description: "Routes for debugging" },
+        ],
+      },
+    }),
+  )
   .use(cors())
   .use(Logger.fileMiddleware())
   .use(Logger.streamMiddleware())
