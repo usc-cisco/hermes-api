@@ -76,7 +76,7 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
     },
   )
   .patch(
-    "/admin/:course/coordinator/status",
+    "/admin/:course/status",
     async ({ body, params: { course } }: CoordinatorContext) => {
       return await coordinatorService.updateCoordinatorStatus(course, body.status)
     },
