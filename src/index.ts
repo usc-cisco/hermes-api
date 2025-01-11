@@ -5,7 +5,7 @@ import { queue } from "./routers/queue.router"
 import { Logger } from "./utils/logger.util"
 import { cors } from "@elysiajs/cors"
 import { swagger } from "@elysiajs/swagger"
-import { Elysia } from "elysia"
+import { Elysia, error as elysiaError } from "elysia"
 import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
@@ -40,20 +40,27 @@ const app = new Elysia()
       },
     }),
   )
-  .use(cors())
+  .use(
+    cors({
+      origin: true,
+      methods: ["GET", "PATCH", "DELETE", "POST", "PUT"],
+      allowedHeaders: ["Content-Type", "Authorization"],
+      credentials: true,
+    }),
+  )
   .use(Logger.fileMiddleware())
   .use(Logger.streamMiddleware())
   .onError(({ error, code }) => {
     Logger.error("The server encountered an error", error)
 
     if (code === "NOT_FOUND") {
-      return "Not found"
+      return elysiaError(404, "Not found")
     } else if (code === "VALIDATION") {
-      return error.validator.Errors(error.value).First().message
+      return elysiaError(400, error.validator.Errors(error.value).First().message)
     } else if (code === "BASIC_AUTH_ERROR") {
-      return "Unauthorized"
+      return elysiaError(403, "Unauthorized")
     } else {
-      return "An unexpected error occurred"
+      return elysiaError(500, "An unexpected error occurred")
     }
   })
   .use(queue)
