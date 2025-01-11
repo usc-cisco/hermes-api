@@ -4,7 +4,7 @@ import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CourseNameEnum } from "../types/enums/CourseNameEnum"
 import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
-import Elysia, { t } from "elysia"
+import Elysia, { error, t } from "elysia"
 
 type QueueContext = {
   headers: {
@@ -32,25 +32,73 @@ export const queue = new Elysia({ prefix: "/queue" })
   .guard({
     params: "course",
   })
-  .delete("/admin/reset", () => queueNumberService.resetAll())
+  .delete("/admin/reset", () => queueNumberService.resetAll(), {
+    tags: ["Queue"],
+    detail: {
+      description: "Deletes all the queue numbers for every course.",
+    },
+  })
   .delete(
-    "/number",
+    "/:course/number",
     async ({ headers }: QueueContext) => {
       const studentId = headers.idNumber
 
       if (!studentId) {
-        return { message: "Student ID not found" }
+        return error(400, "Student ID not found")
       }
 
       return await queueNumberService.dequeueById(studentId)
     },
     {
       beforeHandle: [validateQueueToken],
+      tags: ["Queue"],
+      detail: {
+        description: "Deletes a student's own queue number.",
+        responses: {
+          "200": {
+            description: "Successfully deleted the student's queue number.",
+          },
+          "401": {
+            description: "Unauthorized.",
+          },
+        },
+      },
     },
   )
-  .get("/:course/number/current", async ({ params: { course } }: QueueContext) => {
-    return await queueNumberService.findCurrentQueueByCourse(course)
-  })
+  .get(
+    "/:course/number/current",
+    async ({ params: { course } }: QueueContext) => {
+      return await queueNumberService.findCurrentQueueByCourse(course)
+    },
+    {
+      tags: ["Queue"],
+      detail: {
+        description: "Gets the queue status of a course.",
+        responses: {
+          "200": {
+            description: "Successfully fetched the queue status.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    current: {
+                      type: "number",
+                      description: "The queue number currently being attended to.",
+                    },
+                    max: {
+                      type: "number",
+                      description: "The largest queue number.",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  )
   .post(
     "/:course/number",
     async ({ headers, params: { course } }: QueueContext) => {
@@ -61,17 +109,87 @@ export const queue = new Elysia({ prefix: "/queue" })
       }
 
       // Check if student already has a queue number
-      if (await queueNumberService.findByStudentId(studentId)) return { message: "Student already has a queue number" }
+      if (await queueNumberService.findByStudentId(studentId)) return error(400, "Student already has a queue number")
 
       return await queueNumberService.enqueue(course, studentId)
     },
     {
       beforeHandle: [validateQueueToken],
+      tags: ["Queue"],
+      detail: {
+        description: "Creates a queue number and associates the JWT student ID with it.",
+        requestBody: {
+          required: false,
+          description: "No request body required. (!) Make sure to select None as the body type.",
+          content: {},
+        },
+        responses: {
+          "200": {
+            description: "Successfully created a queue number for the student.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "The queue number SQL id. Not important.",
+                    },
+                    studentId: {
+                      type: "string",
+                      description: "The studentId associated with the queue number.",
+                    },
+                    courseName: {
+                      type: "string",
+                      description: "The queue number's course (ie. BSCS, BSIT, BSIS).",
+                    },
+                    queueNumber: {
+                      type: "number",
+                      description: "The queue number.",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Student already has a queue number.",
+          },
+        },
+      },
     },
   )
-  .patch("/admin/:course/number/current", async ({ params: { course } }: QueueContext) => {
-    return await queueNumberService.dequeueFront(course)
-  })
-  .delete("/admin/:course/reset", ({ params: { course } }: QueueContext) => {
-    return queueNumberService.resetByCourse(course)
-  })
+  .patch(
+    "/admin/:course/number/current",
+    async ({ params: { course } }: QueueContext) => {
+      return await queueNumberService.dequeueFront(course)
+    },
+    {
+      tags: ["Queue"],
+      detail: {
+        description: "Moves the queue forward by dequeuing the currently being served number.",
+        security: [
+          {
+            basicAuth: [],
+          },
+        ],
+      },
+    },
+  )
+  .delete(
+    "/admin/:course/reset",
+    ({ params: { course } }: QueueContext) => {
+      return queueNumberService.resetByCourse(course)
+    },
+    {
+      tags: ["Queue"],
+      detail: {
+        description: "Resets the queue of a course.",
+        security: [
+          {
+            basicAuth: [],
+          },
+        ],
+      },
+    },
+  )
