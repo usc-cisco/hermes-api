@@ -8,6 +8,8 @@ on:
             - bs--env-update-workflow
 
 jobs:
+    # This job will automatically overwrite the .env file in the server
+    # with the environment variables stored in the repository secrets.
     deploy:
         runs-on: ubuntu-latest
         steps:
@@ -17,7 +19,6 @@ jobs:
                 echo "ADMIN_CREDENTIALS=${{ secrets.ADMIN_CREDENTIALS }}" >> .env
                 echo "QUEUE_EXPIRY=${{ secrets.QUEUE_EXPIRY }}" >> .env
                 echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
-                echo "HELLO" >> .env
             
             - name: Deploy file
               uses: appleboy/scp-action@v0.1.7
