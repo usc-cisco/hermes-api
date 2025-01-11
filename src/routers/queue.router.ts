@@ -28,6 +28,15 @@ export const queue = new Elysia({ prefix: "/queue" })
       course: CourseUnion,
     }),
   })
+  .get(
+    "/:course/number/current",
+    async ({ params: { course } }: QueueContext) => {
+      return await queueNumberService.findCurrentQueueByCourse(course)
+    },
+    {
+      beforeHandle: [QueueTokenValidation, CourseValidation],
+    },
+  )
   .use(jwtPlugin)
   .delete(
     "/number",
@@ -61,15 +70,6 @@ export const queue = new Elysia({ prefix: "/queue" })
       if (await queueNumberService.findByStudentId(studentId)) return { message: "Student already has a queue number" }
 
       return await queueNumberService.enqueue(course, studentId)
-    },
-    {
-      beforeHandle: [QueueTokenValidation, CourseValidation],
-    },
-  )
-  .get(
-    "/:course/number/current",
-    async ({ params: { course } }: QueueContext) => {
-      return await queueNumberService.findCurrentQueueByCourse(course)
     },
     {
       beforeHandle: [QueueTokenValidation, CourseValidation],
