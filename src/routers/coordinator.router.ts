@@ -40,6 +40,39 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
     },
     {
       tags: ["Coordinator"],
+      detail: {
+        description: "Gets the coordinator info & status of a specified course.",
+        responses: {
+          "200": {
+            description: "Successfully fetched the student's queue number.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "The teacher's id. Not important.",
+                    },
+                    name: {
+                      type: "string",
+                      description: "The name of the coordinator.",
+                    },
+                    courseName: {
+                      type: "string",
+                      description: "CourseNameEnum (ie. BSCS | BSIT | BSIS)",
+                    },
+                    queueNumber: {
+                      type: "string",
+                      description: "CoordinatorStatusEnum (ie. available | away | unavailable)",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   )
   .patch(
@@ -50,5 +83,38 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
     {
       body: "newStatus",
       tags: ["Coordinator"],
+      detail: {
+        description: "Updates the coordinator status of a specified course.",
+        responses: {
+          "200": {
+            description: "Successfully updated the coordinator's status.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    id: {
+                      type: "number",
+                      description: "The teacher's id. Not important.",
+                    },
+                    name: {
+                      type: "string",
+                      description: "The name of the coordinator.",
+                    },
+                    courseName: {
+                      type: "string",
+                      description: "CourseNameEnum (ie. BSCS | BSIT | BSIS)",
+                    },
+                    queueNumber: {
+                      type: "string",
+                      description: "CoordinatorStatusEnum (ie. available | away | unavailable)",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
     },
   )
