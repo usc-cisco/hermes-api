@@ -18,7 +18,7 @@ Thumbs.db
 
 # env files
 .env*
-!.env.example
+!.env*.example
 
 # bun
 **/*.bun
