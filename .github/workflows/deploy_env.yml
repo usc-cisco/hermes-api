@@ -1,0 +1,42 @@
+name: Deploy new environment variables
+
+on:
+  workflow_dispatch:
+  push:
+    branches:
+      - main
+
+jobs:
+  # This job will automatically overwrite the .env file in the server
+  # with the environment variables stored in the repository secrets.
+  deploy:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Generate file
+        run: |
+          touch .env
+          echo "ADMIN_CREDENTIALS=${{ secrets.ADMIN_CREDENTIALS }}" >> .env
+          echo "QUEUE_EXPIRY=${{ secrets.QUEUE_EXPIRY }}" >> .env
+          echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+          echo "PORT=${{ secrets.SERVER_PORT }}" >> .env
+
+      - name: Deploy file
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DCISM_HOST }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
+          port: ${{ secrets.DCISM_PORT }}
+          source: ".env"
+          target: "${{ secrets.DCISM_SUBDOMAIN }}"
+
+      - name: Update .htaccess
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DCISM_HOST }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
+          port: ${{ secrets.DCISM_PORT }}
+          script: |
+            cd ${{ secrets.DCISM_SUBDOMAIN }}
+            sed -i "s/127.0.0.1:[0-9]\+/127.0.0.1:${{ secrets.SERVER_PORT }}/" .htaccess
