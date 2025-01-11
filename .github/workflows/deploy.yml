@@ -7,14 +7,10 @@ on:
 
 jobs:
   build:
+    # Check `docs/server-setup-guide.md`
     name: Build and Run
     runs-on: ubuntu-latest
     steps:
-      # This workflow should be run only if the server at DCISM_SUBDOMAIN has been set up with the following steps:
-      # 1. `git clone` the source code
-      # 2. Run `bun install`
-      # 3. Run `bun db:generate`, `bun db:migrate`, and `bun db:seed`
-      # 4. Start Hermes with `pm2 start ./dist/hermes --name hermes`
       - name: Build and Run Hermes
         uses: appleboy/ssh-action@v1.2.0
         with:
