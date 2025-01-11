@@ -15,7 +15,7 @@ async function seedDatabase() {
     // Split the text file into an array of student IDs
     const studentIds = studentIdsText
       .split("\n")
-      .map((id) => id.trim())
+      .map((id) => id.trim().replace("s", ""))
       .filter((id) => id.length > 0)
 
     // Validate that we have enough student IDs

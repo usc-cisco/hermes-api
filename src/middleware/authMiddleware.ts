@@ -1,7 +1,7 @@
 import { HttpStatusEnum } from "../types/enums/HttpStatusEnum"
 import { AuthMiddlewareContext, QueueJwtPayload } from "../types/interfaces/JwtInterface"
 
-export const QueueTokenValidation = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
+export const validateQueueToken = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
   const { authorization } = context.headers as { authorization?: string }
 
   if (!authorization) {
@@ -28,7 +28,7 @@ export const QueueTokenValidation = async (context: AuthMiddlewareContext): Prom
 }
 
 // Validate if the user's requested course is equal to his registered queue course
-export const CourseValidation = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
+export const validateCourse = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
   const { course: headerCourse } = context.headers as { course?: string }
 
   if (!headerCourse) {
