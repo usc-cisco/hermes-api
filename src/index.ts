@@ -10,7 +10,7 @@ import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
   .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
-  .get("/health", () => "Server is healthy", { tags: ["Debug"] })
+  .get("/health", () => "Server is healthy", { tags: ["Debug"], detail: { description: "Used for health checks." } })
   .use(
     swagger({
       documentation: {
