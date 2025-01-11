@@ -11,7 +11,7 @@
     "db:generate": "drizzle-kit generate",
     "db:migrate": "bun run ./src/db/utils/migrate.ts",
     "db:seed": "bun run ./src/db/utils/seed.ts",
-    "db:init": "bun run db:generate && db:migrate && db:seed"
+    "db:init": "bun run db:generate && bun run db:migrate && bun run db:seed"
   },
   "dependencies": {
     "@bogeychan/elysia-logger": "^0.1.7",
