@@ -26,3 +26,18 @@ export const validateQueueToken = async (context: AuthMiddlewareContext): Promis
   context.headers.idNumber = validToken.idNumber.toString()
   context.headers.course = validToken.course
 }
+
+// Validate if the user's requested course is equal to his registered queue course
+export const validateCourse = async (context: AuthMiddlewareContext): Promise<void | { message: string }> => {
+  const { course: headerCourse } = context.headers as { course?: string }
+
+  if (!headerCourse) {
+    context.set.status = HttpStatusEnum.BAD_REQUEST
+    return { message: "Course header is required" }
+  }
+
+  if (headerCourse !== context.params.course) {
+    context.set.status = HttpStatusEnum.UNAUTHORIZED
+    return { message: `You are not authorized to access ${context.params.course}` }
+  }
+}
