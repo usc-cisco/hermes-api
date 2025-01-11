@@ -5,7 +5,7 @@ on:
     
     push:
         branches:
-            - bs--env-update-workflow
+            - main
 
 jobs:
     # This job will automatically overwrite the .env file in the server
@@ -19,6 +19,7 @@ jobs:
                 echo "ADMIN_CREDENTIALS=${{ secrets.ADMIN_CREDENTIALS }}" >> .env
                 echo "QUEUE_EXPIRY=${{ secrets.QUEUE_EXPIRY }}" >> .env
                 echo "JWT_SECRET=${{ secrets.JWT_SECRET }}" >> .env
+                echo "SERVER_PORT=${{ secrets.SERVER_PORT }}" >> .env
             
             - name: Deploy file
               uses: appleboy/scp-action@v0.1.7
@@ -28,4 +29,15 @@ jobs:
                 password: ${{ secrets.DCISM_PASSWORD }}
                 port: ${{ secrets.DCISM_PORT }}
                 source: ".env"
-                target: "${{ secrets.DCISM_SUBDOMAIN }}"
+                # target: "${{ secrets.DCISM_SUBDOMAIN }}"
+                target: "./"
+            
+            - name: Update .htaccess
+              uses: appleboy/ssh-action@v1.2.0
+              with:
+                host: ${{ secrets.DCISM_HOST }}
+                username: ${{ secrets.DCISM_USERNAME }}
+                password: ${{ secrets.DCISM_PASSWORD }}
+                port: ${{ secrets.DCISM_PORT }}
+                script: |
+                    sed -i "s/127.0.0.1:[0-9]\+/127.0.0.1:${{ secrets.SERVER_PORT }}/" .htaccess
