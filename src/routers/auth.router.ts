@@ -91,7 +91,10 @@ export const auth = new Elysia({ prefix: "/auth" })
       }
 
       set.status = HttpStatusEnum.CREATED
-      const token = await getAuthToken(queueJwt, body as QueueJwtPayload)
+
+      const payload: QueueJwtPayload = body
+
+      const token = await getAuthToken(queueJwt, payload)
       return {
         token,
       }
