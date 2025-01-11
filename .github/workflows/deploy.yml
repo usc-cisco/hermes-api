@@ -7,12 +7,10 @@ on:
 
 jobs:
   build:
+    # Check `docs/server-setup-guide.md`
     name: Build and Run
     runs-on: ubuntu-latest
     steps:
-      # This assumes the server is already setup with the following:
-      # - The source code is already cloned at DCISM_SUBDOMAIN
-      # - An instance of hermes is already running in pm2 (e.g., pm2 start ./dist/hermes --name hermes was already runned)
       - name: Build and Run Hermes
         uses: appleboy/ssh-action@v1.2.0
         with:
