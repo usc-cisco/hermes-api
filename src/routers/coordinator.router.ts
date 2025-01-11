@@ -114,6 +114,9 @@ export const coordinator = new Elysia({ prefix: "/coordinator" })
               },
             },
           },
+          "403": {
+            description: "You did not set the correct Basic Auth header.",
+          },
         },
       },
     },
