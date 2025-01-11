@@ -34,5 +34,3 @@ sqlite.db
 # drizzle
 drizzle
 
-# student ID text file
-/src/db/data/student-ids.txt
