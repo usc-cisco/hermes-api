@@ -38,18 +38,6 @@ async function seedDatabase() {
     await db.insert(courses).values([{ courseName: "BSCS" }, { courseName: "BSIT" }, { courseName: "BSIS" }])
     console.log("Seeded courses table")
 
-    // Seed queue numbers for each course
-    const queueData = ["BSCS", "BSIT", "BSIS"].flatMap((courseName) => {
-      return Array.from({ length: 5 }, (_, index) => ({
-        studentId: `s${index + 1}`,
-        courseName,
-        queueNumber: index + 1,
-      }))
-    })
-
-    await db.insert(queueNumbers).values(queueData)
-    console.log("Seeded queue numbers")
-
     // Seed coordinators
     await db.insert(coordinators).values([
       {
