@@ -1,4 +1,5 @@
 import { env } from "./config/env.config"
+import { basicAuth } from "./middleware/basicAuthMiddleware"
 import { auth } from "./routers/auth.router"
 import { coordinator } from "./routers/coordinator.router"
 import { queue } from "./routers/queue.router"
@@ -9,6 +10,13 @@ import { Elysia, error as elysiaError } from "elysia"
 import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
+  .use(
+    basicAuth({
+      credentials: { env: "ADMIN_CREDENTIALS" },
+      scope: ["/auth/admin", "/queue/admin", "/coordinator/admin"],
+      skipCorsPreflight: true,
+    }),
+  )
   .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
   .get("/health", () => "Server is healthy", { tags: ["Debug"], detail: { description: "Used for health checks." } })
   .use(
@@ -42,7 +50,7 @@ const app = new Elysia()
   )
   .use(
     cors({
-      origin: true,
+      origin: [/.*\.dcism\.org$/, /https?:\/\/localhost(:\d+)?$/],
       methods: ["GET", "PATCH", "DELETE", "POST", "PUT"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,

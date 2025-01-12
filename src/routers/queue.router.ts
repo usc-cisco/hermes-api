@@ -4,7 +4,6 @@ import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CourseNameEnum } from "../types/enums/CourseNameEnum"
 import { Logger } from "../utils/logger.util"
-import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
 import Elysia, { error, t } from "elysia"
 
 type QueueContext = {
@@ -18,12 +17,6 @@ type QueueContext = {
 }
 
 export const queue = new Elysia({ prefix: "/queue" })
-  .use(
-    basicAuth({
-      credentials: { env: "ADMIN_CREDENTIALS" },
-      scope: "/queue/admin",
-    }),
-  )
   .use(jwtPlugin)
   .model({
     course: t.Object({
@@ -48,6 +41,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       return await queueNumberService.dequeueById(studentId)
     },
     {
+      // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
       beforeHandle: [validateQueueToken],
       tags: ["Queue"],
       detail: {
@@ -82,6 +76,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       return queueNumber
     },
     {
+      // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
       beforeHandle: [validateQueueToken],
       tags: ["Queue"],
       detail: {
@@ -173,6 +168,7 @@ export const queue = new Elysia({ prefix: "/queue" })
     },
     {
       params: "course",
+      // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
       beforeHandle: [validateQueueToken, validateCourse],
       tags: ["Queue"],
       detail: {
