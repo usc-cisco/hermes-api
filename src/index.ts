@@ -50,7 +50,7 @@ const app = new Elysia()
   )
   .use(
     cors({
-      origin: true,
+      origin: [/.*\.dcism\.org$/, /https?:\/\/localhost(:\d+)?$/],
       methods: ["GET", "PATCH", "DELETE", "POST", "PUT"],
       allowedHeaders: ["Content-Type", "Authorization"],
       credentials: true,
