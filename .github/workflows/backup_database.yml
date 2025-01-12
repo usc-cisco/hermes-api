@@ -1,8 +1,8 @@
-name: Back up database every 20 minutes
+name: Back up database
 
 on:
   schedule:
-    - cron: "*/20 * * * *"
+    - cron: "0 */4 * * *"
   workflow_dispatch:
 
 jobs:
