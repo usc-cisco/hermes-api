@@ -1,0 +1,24 @@
+name: Back up database every 20 minutes
+
+on:
+    schedule:
+        - cron: "*/20 * * * *"
+    push:
+        branches:
+            - bs--backup-db-cron
+
+jobs:
+    backup:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Back up database
+              uses: appleboy/ssh-action@v1.2.0
+              with:
+                  host: ${{ secrets.DCISM_HOST }}
+                  username: ${{ secrets.DCISM_USERNAME }}
+                  password: ${{ secrets.DCISM_PASSWORD }}
+                  port: ${{ secrets.DCISM_PORT }}
+                  script: |
+                      current_date=$(date +"%Y-%m-%d_%H-%M-%S")
+                      echo "Backing up database for $current_date"
+                      cp ${{ secrets.DCISM_SUBDOMAIN }}/sqlite.db hermes-db-snapshots/${current_date}_sqlite.db
