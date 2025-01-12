@@ -1,11 +1,18 @@
-const QueueExpiry = Number(process.env.QUEUE_EXPIRY);
-const QueueHourStart = Number(process.env.QUEUE_HRSTART);
-const QueueMinStart = Number(process.env.QUEUE_MINSTART);
+export const getJwtExpiry = (queueStartTime: string, queueEndTime: string): number => {
+  const [startHours, startMinutes] = queueStartTime.split(':').map(Number);
+  const [endHours, endMinutes] = queueEndTime.split(':').map(Number);
 
-/** Validates If the time is between 0 and the queue start time**/
-const ValidateTime = 
-  new Date().getHours() >= QueueHourStart
-  && (new Date().getHours() > QueueHourStart || new Date().getMinutes() >= QueueMinStart)
-  ? new Date().getHours() : QueueExpiry;
+  const currentTime = new Date();
 
-export const remainingTime = QueueExpiry - ValidateTime;
+  // calculate start time and end time in milliseconds (compared to current day)
+  const startMillis = new Date(currentTime).setHours(startHours, startMinutes, 0, 0);
+  const endMillis = new Date(currentTime).setHours(endHours, endMinutes, 0, 0);
+
+  if (currentTime.getTime() < startMillis) {
+    return 0;
+  }
+  // convert to seconds
+  const remainingTime = (endMillis - currentTime.getTime()) / 1000; 
+  // condition to avoid time format error in case its passed the end time
+  return remainingTime > 0 ? remainingTime : 0;
+}
