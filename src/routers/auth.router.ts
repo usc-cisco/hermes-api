@@ -4,16 +4,9 @@ import { getAuthToken } from "../services/auth.service"
 import { JwtModel } from "../types/entities/dtos/JwtModel"
 import { HttpStatusEnum } from "../types/enums/HttpStatusEnum"
 import { AuthMiddlewareContext, QueueJwtPayload } from "../types/interfaces/JwtInterface"
-import { basicAuth } from "@eelkevdbos/elysia-basic-auth"
 import Elysia from "elysia"
 
 export const auth = new Elysia({ prefix: "/auth" })
-  .use(
-    basicAuth({
-      credentials: { env: "ADMIN_CREDENTIALS" },
-      scope: "/auth/admin",
-    }),
-  )
   .model({
     JwtModel,
   })
