@@ -17,7 +17,6 @@
     "@bogeychan/elysia-logger": "^0.1.7",
     "@commitlint/cli": "^19.6.1",
     "@commitlint/config-conventional": "^19.6.0",
-    "@eelkevdbos/elysia-basic-auth": "^2.0.0",
     "@elysiajs/bearer": "^1.2.0",
     "@elysiajs/cors": "^1.2.0",
     "@elysiajs/jwt": "^1.2.0",
