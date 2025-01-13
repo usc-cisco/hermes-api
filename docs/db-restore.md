@@ -13,7 +13,7 @@ cp snapshot-file.db ../hermes.dcism.org/sqlite.db
 # what the ORM is expecting
 ```
 
-1. Restart the server process
+3. Restart the server process
 ```bash
 # Assuming you're in hermes-db-snapshots/
 cd ../hermes.dcism.org
