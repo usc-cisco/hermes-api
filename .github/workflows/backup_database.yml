@@ -1,0 +1,30 @@
+name: Back up database
+
+on:
+  schedule:
+    - cron: "*/10 * * * *"
+  workflow_dispatch:
+
+jobs:
+  # This job will back up the database every 10 minutes
+  # and store the backup in the `hermes-db-snapshots` directory.
+  # The oldest backup will be deleted if there are more than 12 backups.
+  backup:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Back up database
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DCISM_HOST }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
+          port: ${{ secrets.DCISM_PORT }}
+          script: |
+            current_date=$(date +"%Y-%m-%d_%H-%M-%S")
+            echo "Backing up database for $current_date"
+            file_count=$(ls hermes-db-snapshots | wc -l)
+            if [ $file_count -ge 12 ]; then
+              oldest_file=$(ls -t hermes-db-snapshots | tail -n 1)
+              rm hermes-db-snapshots/${oldest_file}
+            fi
+            cp ${{ secrets.DCISM_SUBDOMAIN }}/sqlite.db hermes-db-snapshots/${current_date}_sqlite.db
