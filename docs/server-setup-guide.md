@@ -51,8 +51,11 @@ bun run build
 Start the server using PM2:
 
 ```bash
-bun pm2 start ./dist/hermes --name hermes
+bun pm2 start ./dist/hermes --name hermes -i 2
 ```
+
+> [!NOTE]
+> You can increase it to 4 instances if needed, but it's recommended to set it to 2 due to resource constraints.
 
 ## Step 7: Configure `.htaccess`
 
