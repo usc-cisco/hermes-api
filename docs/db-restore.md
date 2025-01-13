@@ -17,5 +17,5 @@ cp snapshot-file.db ../hermes.dcism.org/sqlite.db
 ```bash
 # Assuming you're in hermes-db-snapshots/
 cd ../hermes.dcism.org
-npx pm2 restart hermes
+bun pm2 reload hermes
 ```
