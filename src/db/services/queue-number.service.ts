@@ -20,7 +20,9 @@ export const queueNumberService: IQueueNumberService = {
     return record
   },
 
-  async findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{ current: number; max: number }> {
+  async findCurrentQueueByCourse(
+    courseName: CourseNameEnum,
+  ): Promise<{ current: number; max: number; currentStudentId: string | null }> {
     const currentQueueRecord = await db
       .select()
       .from(queueNumbers)
@@ -29,6 +31,7 @@ export const queueNumberService: IQueueNumberService = {
       .limit(1)
 
     const current: number = currentQueueRecord.length ? currentQueueRecord[0].queueNumber : 0
+    const currentStudentId = currentQueueRecord.length ? currentQueueRecord[0].studentId : null
 
     const maxQueueRecord = await db
       .select()
@@ -39,7 +42,7 @@ export const queueNumberService: IQueueNumberService = {
 
     const max: number = maxQueueRecord.length ? maxQueueRecord[0].queueNumber : 0
 
-    return { current, max }
+    return { current, max, currentStudentId }
   },
   async enqueue(courseName: CourseNameEnum, studentId: string): Promise<QueueNumber> {
     const maxQueueRecord = await db
