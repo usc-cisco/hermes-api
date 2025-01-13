@@ -42,12 +42,19 @@ export const queueNumberService: IQueueNumberService = {
     return { current, max }
   },
   async enqueue(courseName: CourseNameEnum, studentId: string): Promise<QueueNumber> {
-    const count = await db.$count(queueNumbers, eq(queueNumbers.courseName, courseName))
+    const maxQueueRecord = await db
+      .select()
+      .from(queueNumbers)
+      .where(eq(queueNumbers.courseName, courseName))
+      .orderBy(desc(queueNumbers.queueNumber))
+      .limit(1)
+
+    const max: number = maxQueueRecord.length ? maxQueueRecord[0].queueNumber : 0
 
     const data: InsertQueueNumber = {
       studentId,
       courseName,
-      queueNumber: count + 1,
+      queueNumber: max + 1,
     }
 
     const records = await db.insert(queueNumbers).values(data).returning()
