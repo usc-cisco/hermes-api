@@ -126,7 +126,7 @@ export const queue = new Elysia({ prefix: "/queue" })
       params: "course",
       tags: ["Queue"],
       detail: {
-        description: "Gets the queue status of a course.",
+        description: "Gets the queue status of a course & the student ID to be served.",
         responses: {
           "200": {
             description: "Successfully fetched the queue status.",
@@ -142,6 +142,12 @@ export const queue = new Elysia({ prefix: "/queue" })
                     max: {
                       type: "number",
                       description: "The largest queue number.",
+                    },
+                    currentStudentId: {
+                      type: "string",
+                      nullable: true,
+                      description:
+                        "The student ID of the current queue number, otherwise null if no queue number exists.",
                     },
                   },
                 },
