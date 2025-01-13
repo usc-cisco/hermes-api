@@ -4,9 +4,6 @@ on:
   schedule:
     - cron: "*/10 * * * *"
   workflow_dispatch:
-  push:
-    branches:
-      - bs--backup-db-cron
 
 jobs:
   # This job will back up the database every 10 minutes
