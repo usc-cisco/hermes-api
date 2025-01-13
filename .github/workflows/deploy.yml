@@ -27,4 +27,4 @@ jobs:
             bun pm2 stop hermes
             bun run build
             chmod +x ./dist/hermes
-            bun pm2 restart hermes
+            bun pm2 reload hermes
