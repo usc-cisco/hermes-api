@@ -5,6 +5,7 @@ import { JwtModel } from "../types/entities/dtos/JwtModel"
 import { HttpStatusEnum } from "../types/enums/HttpStatusEnum"
 import { AuthMiddlewareContext, QueueJwtPayload } from "../types/interfaces/JwtInterface"
 import Elysia from "elysia"
+import { getRemainingQueueTime } from "../utils/time.util"
 
 export const auth = new Elysia({ prefix: "/auth" })
   .model({
@@ -74,6 +75,11 @@ export const auth = new Elysia({ prefix: "/auth" })
       if (!body.idNumber || !body.course) {
         set.status = HttpStatusEnum.BAD_REQUEST
         return { message: "ID number and course are required" }
+      }
+
+      if(getRemainingQueueTime(process.env.QUEUE_START || "07:30", process.env.QUEUE_EXPIRY || "17:00") === 0) {
+        set.status = HttpStatusEnum.BAD_REQUEST
+        return { message: "Queue is closed or not yet started." }
       }
 
       const student = await studentService.findStudentById(body.idNumber)
