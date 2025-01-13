@@ -1,4 +1,4 @@
-export const getJwtExpiry = (queueStartTime: string, queueEndTime: string): number => {
+export const getRemainingQueueTime = (queueStartTime: string, queueEndTime: string): number => {
   const [startHours, startMinutes] = queueStartTime.split(':').map(Number);
   const [endHours, endMinutes] = queueEndTime.split(':').map(Number);
 
