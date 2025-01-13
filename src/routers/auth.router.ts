@@ -77,7 +77,7 @@ export const auth = new Elysia({ prefix: "/auth" })
         return { message: "ID number and course are required" }
       }
 
-      if(getRemainingQueueTime(process.env.QUEUE_START || "07:30", process.env.QUEUE_EXPIRY || "17:00") === 0) {
+      if(getRemainingQueueTime(process.env.QUEUE_START || "08:00", process.env.QUEUE_EXPIRY || "17:00") === 0) {
         set.status = HttpStatusEnum.BAD_REQUEST
         return { message: "Queue is closed or not yet started." }
       }
