@@ -16,7 +16,7 @@ cp snapshot-file.db ../hermes.dcism.org/sqlite.db
 
 3. Restart the server process
 ```bash
-# Assuming you're in hermes-db-snapshots/
-cd ../hermes.dcism.org
+# pm2 can run from anywhere, just verify that the hermes process is running
+bun pm2 list
 bun pm2 reload hermes
 ```
