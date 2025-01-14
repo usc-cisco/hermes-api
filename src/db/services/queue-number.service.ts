@@ -43,7 +43,6 @@ export const queueNumberService: IQueueNumberService = {
       .orderBy(asc(queueNumbers.queueNumber))
       .limit(3)
 
-    // Get the maximum queue number
     const maxQueueRecord = await db
       .select()
       .from(queueNumbers)
@@ -54,7 +53,6 @@ export const queueNumberService: IQueueNumberService = {
     const current: number = currentQueueWithStudents.length ? currentQueueWithStudents[0].queueNumber : 0
     const max: number = maxQueueRecord.length ? maxQueueRecord[0].queueNumber : 0
 
-    // Format the queued students array
     const queuedStudents = currentQueueWithStudents.map((record) => ({
       queueNumber: record.queueNumber,
       student: record.student.id ? record.student : null,
