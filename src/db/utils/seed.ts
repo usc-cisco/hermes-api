@@ -8,28 +8,32 @@ import { join } from "path"
 
 async function seedDatabase() {
   try {
-    // Read student IDs from txt file
-    const studentIdsText = await readFile(join(__dirname, "..", "data", "student-ids.txt"), "utf-8")
+    // Read student data from txt file
+    const studentDataText = await readFile(join(__dirname, "..", "data", "student-ids.txt"), "utf-8")
 
-    // Split the text file into an array of student IDs
-    const studentIds = studentIdsText
+    // Parse student data into objects with id and name
+    const studentData = studentDataText
       .split("\n")
-      .map((id) => id.trim().replace("s", ""))
-      .filter((id) => id.length > 0)
+      .map((line) => {
+        const [name, id] = line.split(",")
+        return id
+          ? {
+              id: id.trim(),
+              name: name.trim(),
+            }
+          : null
+      })
+      .filter((entry): entry is { id: string; name: string } => entry !== null)
 
-    // Validate that we have enough student IDs
-    if (studentIds.length < 1500) {
-      throw new Error(`Not enough student IDs in file. Found ${studentIds.length}, need 1522`)
+    // Validate that we have enough student records
+    if (studentData.length < 1500) {
+      throw new Error(`Not enough student records in file. Found ${studentData.length}, need 1522`)
     }
 
     // Begin seeding all tables
     console.log("Starting database seeding...")
 
     // Seed students table
-    const studentData = studentIds.map((id) => ({
-      id: id,
-    }))
-
     await db.insert(students).values(studentData)
     console.log("Seeded students table with 1522 records")
 
