@@ -80,7 +80,6 @@ Chris Adrian Noel S. Barago,18101018
 Sharly Pia Rose S. Barago,23103148
 Mart Kraig A. Barbon,23101562
 Jomer Allan G. Barcenilla,17101189
-Sean Marco D. Barcenilla,
 Allan Jericho V. Bargamento,18101799
 Lenel John N. Baring,20102688
 Shane Louis A. Barita,18020776
@@ -138,7 +137,6 @@ Mark David M. Calzada,21100770
 Julian Ernest A. Camello,21100573
 Lourdes Marie Kyle D. Campomanes,19100340
 Elijah Raven R. Campos,21102775
-Yza Belle Carlisle M. Campos,
 Clarke Steven H. Canal,23103439
 John Carlo A. Candela,18104552
 Ian Dave B. Canlas,23200047
@@ -459,7 +457,6 @@ John Rey C. Millor,22104386
 Alexa Rose I. Minoza,23101000
 Mary Chevel P. Modesto,20800073
 Jeremyseth U-wee R. Mondigo,22200210
-Justin Alain B. Monreal,
 Dan Lius M. Monsales,22102950
 Liv Jewel D. Monsalud,23100807
 Simone Mikaela P. Montanez,22103438
@@ -475,7 +472,6 @@ Joan Angeline P. Nacario,18101228
 Shawn Ryan C. Nacario,22103598
 Thristan Jay E. Nakila,22103274
 Loise Brendan W. Narvasa,20100679
-Mark Angelo E. Navarro,
 Marvin S. Navarro,18103694
 Noel Ephraim M. Nazareno,21800716
 Shannen T. Nazareno,19103991
@@ -793,7 +789,6 @@ Jethro Anton C. Danao,19100095
 Nasvin F. Del Rosario,22102411
 Paola  Angela S. Del Socorro,18103474
 Jake Harvey F. Despabeladero,07500972
-Dorothy M. Detera,
 Peter Lawrence R. Diaz,16100761
 Val Nico A. Dinopol,14104380
 James Eduard N. Empinado,24100021
@@ -801,7 +796,6 @@ Ken Frederick S. Enaron,23104084
 Jae B. Enolpe,14101277
 Angel Karel B. Enriquez,23104216
 Railey Ashton R. Escandor,18020754
-Rowela J. Estrada,
 Prince Dale J. Feliza,13105850
 Maurice Jude U. Fontanosa,07303266
 Lordgy Sean L. Francisco,19105695
@@ -873,7 +867,6 @@ Van Coke D. Velasquez,16101671
 Alexander James P. Velez,16100667
 Ron Eldwin L. Villaver,21800743
 Yi Yu,20300023
-Mary Beatrice N. Franco,
 Jerlon A. Abayon,22105112
 Reyver P. Abellanosa,22104651
 Marian B. Adonay,22104677
@@ -993,7 +986,6 @@ Jhonryl S. Martinez,22104662
 Roselle C. Martinez,22104644
 Christine M. Martonia,21103823
 Syvert Jay B. Matorinio,22104647
-Michael Jason D. Mayol,
 Kenet C. Medez,22104729
 Pia Mae E. Meguizo,21103867
 Justine N. Melloria,23103418
@@ -1066,7 +1058,6 @@ Maria Angelica Zaragoza,16101416
 Jabes Joshua Y. Amador,23200148
 Zowee Mhey M. Aquino,23104410
 Hailey Joy N. Arendain,11820346
-Nikko Bernadette C. Ballovar,
 Neal Stephen D. Bolano,18103191
 Geraldine C. Cahate,12106881
 Dorothy Dawn K. Canada,11700025
@@ -1077,7 +1068,6 @@ Maria Geraldine M. Enriquez,09304764
 Eliseo A. Eraldo III,14101750
 Vince Matthew O. Estrera,23200084
 Joshua Warren G. Faber,23200114
-Paul B. Flores,
 Louis C. Frelicki,20103663
 Antoine Federico P. Godinez,18103881
 Zyleika Vashty N. Invento,19103448
@@ -1351,7 +1341,6 @@ Paulo Bien S. Masnayon,24100067
 William Isaiah I B. Mata,22800171
 Erina Kyla N. Mates,23200159
 Cedrick Andrei Matias,11820072
-Louise Patricia A. Matondo,
 Shem Nathan R. Meca,22101667
 Nicol Daniel E. Medalla,24104623
 Sheane Clifford D. Mediana,23100258
@@ -1385,7 +1374,6 @@ Jolet R. Ople,24104505
 Vera Marie Therese A. Orbello,24104420
 Argel Jan Orbiso,24103439
 Kim Ana Grace G. Ostia,24103258
-Reyhan Paul T. Paglinawan,
 Christian Paul B. Palacio,24102895
 Kim Earl F. Palanas,24100876
 Jezreel Caesar M. Pamanian,24102894
