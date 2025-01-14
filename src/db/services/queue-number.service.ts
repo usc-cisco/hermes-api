@@ -3,6 +3,7 @@ import { IQueueNumberService } from "../../types/abstracts/queue-number-service.
 import type { QueueNumber } from "../../types/entities/QueueNumber"
 import type { CourseNameEnum } from "../../types/enums/CourseNameEnum"
 import { InsertQueueNumber, SelectQueueNumber, queueNumbers } from "../models/queue-number.model"
+import { students } from "../models/students.model"
 import { asc, desc, eq } from "drizzle-orm"
 
 export const queueNumberService: IQueueNumberService = {
@@ -20,18 +21,27 @@ export const queueNumberService: IQueueNumberService = {
     return record
   },
 
-  async findCurrentQueueByCourse(
-    courseName: CourseNameEnum,
-  ): Promise<{ current: number; max: number; currentStudentId: string | null }> {
-    const currentQueueRecord = await db
-      .select()
+  async findCurrentQueueByCourse(courseName: CourseNameEnum): Promise<{
+    current: number
+    max: number
+    queuedStudents: Array<{
+      queueNumber: number
+      student: { id: string; name: string } | null
+    }>
+  }> {
+    const currentQueueWithStudents = await db
+      .select({
+        queueNumber: queueNumbers.queueNumber,
+        student: {
+          id: students.id,
+          name: students.name,
+        },
+      })
       .from(queueNumbers)
       .where(eq(queueNumbers.courseName, courseName))
+      .leftJoin(students, eq(queueNumbers.studentId, students.id))
       .orderBy(asc(queueNumbers.queueNumber))
-      .limit(1)
-
-    const current: number = currentQueueRecord.length ? currentQueueRecord[0].queueNumber : 0
-    const currentStudentId = currentQueueRecord.length ? currentQueueRecord[0].studentId : null
+      .limit(3)
 
     const maxQueueRecord = await db
       .select()
@@ -40,9 +50,19 @@ export const queueNumberService: IQueueNumberService = {
       .orderBy(desc(queueNumbers.queueNumber))
       .limit(1)
 
+    const current: number = currentQueueWithStudents.length ? currentQueueWithStudents[0].queueNumber : 0
     const max: number = maxQueueRecord.length ? maxQueueRecord[0].queueNumber : 0
 
-    return { current, max, currentStudentId }
+    const queuedStudents = currentQueueWithStudents.map((record) => ({
+      queueNumber: record.queueNumber,
+      student: record.student.id ? record.student : null,
+    }))
+
+    return {
+      current,
+      max,
+      queuedStudents,
+    }
   },
   async enqueue(courseName: CourseNameEnum, studentId: string): Promise<QueueNumber> {
     const maxQueueRecord = await db
