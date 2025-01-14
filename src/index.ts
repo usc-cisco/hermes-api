@@ -7,7 +7,6 @@ import { Logger } from "./utils/logger.util"
 import { cors } from "@elysiajs/cors"
 import { swagger } from "@elysiajs/swagger"
 import { Elysia, error as elysiaError } from "elysia"
-import { rateLimit } from "elysia-rate-limit"
 
 const app = new Elysia()
   .use(
@@ -17,7 +16,7 @@ const app = new Elysia()
       skipCorsPreflight: true,
     }),
   )
-  .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
+  // .use(rateLimit({ max: 30, duration: 2000, errorResponse: "Rate limit reached" }))
   .get("/health", () => "Server is healthy", { tags: ["Debug"], detail: { description: "Used for health checks." } })
   .use(
     swagger({
