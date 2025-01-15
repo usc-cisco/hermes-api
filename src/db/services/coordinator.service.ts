@@ -35,7 +35,7 @@ export const coordinatorService: ICoordinatorService = {
   async updateCoordinatorStatus(courseName: CourseNameEnum, status: CoordinatorStatusEnum): Promise<Coordinator> {
     const records = await db
       .update(coordinators)
-      .set({ status: status })
+      .set({ status })
       .where(eq(coordinators.courseName, courseName))
       .returning()
 
