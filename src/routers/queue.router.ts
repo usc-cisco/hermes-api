@@ -1,7 +1,9 @@
+import { coordinatorService } from "../db/services/coordinator.service"
 import { queueNumberService } from "../db/services/queue-number.service"
 import { validateCourse, validateQueueToken } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
+import { CoordinatorStatusEnum } from "../types/enums/CoordinatorStatusEnum"
 import { CourseNameEnum } from "../types/enums/CourseNameEnum"
 import { Logger } from "../utils/logger.util"
 import Elysia, { error, t } from "elysia"
@@ -167,8 +169,21 @@ export const queue = new Elysia({ prefix: "/queue" })
         return error(404, "Student ID not found")
       }
 
+      // Check if coordinator is still accepting new queue numbers
+      const coordinatorStatus = (await coordinatorService.findCoordinatorByCourse(course)).status
+      if (
+        coordinatorStatus &&
+        [CoordinatorStatusEnum.UNAVAILABLE, CoordinatorStatusEnum.CUTOFF].includes(
+          coordinatorStatus as CoordinatorStatusEnum,
+        )
+      ) {
+        return error(403, "Coordinator is not accepting any new queue numbers")
+      }
+
       // Check if student already has a queue number
-      if (await queueNumberService.findByStudentId(studentId)) return error(400, "Student already has a queue number")
+      if (await queueNumberService.findByStudentId(studentId)) {
+        return error(400, "Student already has a queue number")
+      }
 
       return await queueNumberService.enqueue(course, studentId)
     },
@@ -218,6 +233,10 @@ export const queue = new Elysia({ prefix: "/queue" })
           },
           "401": {
             description: "Student's is incorrectly trying to join another course's queue.",
+          },
+          "403": {
+            description:
+              'The coordinator set their status to "unavailable" or "cutoff", meaning they are not accepting any new queue numbers.',
           },
         },
       },

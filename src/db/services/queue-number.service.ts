@@ -55,7 +55,7 @@ export const queueNumberService: IQueueNumberService = {
 
     const queuedStudents = currentQueueWithStudents.map((record) => ({
       queueNumber: record.queueNumber,
-      student: record.student.id ? record.student : null,
+      student: record.student?.id ? record.student : null,
     }))
 
     return {
