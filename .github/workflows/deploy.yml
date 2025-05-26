@@ -31,6 +31,17 @@ jobs:
         run: |
           bun run build
 
+      - name: Run Hermes
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DCISM_HOST }}
+          username: ${{ secrets.DCISM_TEST_USERNAME }}
+          password: ${{ secrets.DCISM_TEST_PASSWORD }}
+          port: ${{ secrets.DCISM_PORT }}
+          script: |
+            cd ${{ secrets.DCISM_TEST_SUBDOMAIN }}
+            bun pm2 stop hermes || true
+
       - name: Upload Build via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
@@ -54,6 +65,4 @@ jobs:
             ls
             bun pm2 logs hermes || true
             chmod +x ./dist/hermes
-            bun pm2 stop hermes || true
             bun pm2 reload hermes || bun pm2 start ./dist/hermes --name hermes -i 2
-            bun pm2 logs hermes
