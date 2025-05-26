@@ -35,34 +35,32 @@ jobs:
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DCISM_HOST }}
-          username: ${{ secrets.DCISM_TEST_USERNAME }}
-          password: ${{ secrets.DCISM_TEST_PASSWORD }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
           port: ${{ secrets.DCISM_PORT }}
           script: |
-            cd ${{ secrets.DCISM_TEST_SUBDOMAIN }}
+            cd ${{ secrets.DCISM_SUBDOMAIN }}
             bun pm2 stop hermes || true
 
       - name: Upload Build via SCP
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DCISM_HOST }}
-          username: ${{ secrets.DCISM_TEST_USERNAME }}
-          password: ${{ secrets.DCISM_TEST_PASSWORD }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
           port: ${{ secrets.DCISM_PORT }}
           source: "./dist, sqlite.db, server.log"
-          target: "${{ secrets.DCISM_TEST_SUBDOMAIN }}"
+          target: "${{ secrets.DCISM_SUBDOMAIN }}"
           overwrite: true
 
       - name: Run Hermes
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DCISM_HOST }}
-          username: ${{ secrets.DCISM_TEST_USERNAME }}
-          password: ${{ secrets.DCISM_TEST_PASSWORD }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
           port: ${{ secrets.DCISM_PORT }}
           script: |
-            cd ${{ secrets.DCISM_TEST_SUBDOMAIN }}
-            ls
-            bun pm2 logs hermes || true
+            cd ${{ secrets.DCISM_SUBDOMAIN }}
             chmod +x ./dist/hermes
-            bun pm2 reload hermes || bun pm2 start ./dist/hermes --name hermes -i 2
+            bun pm2 start ./dist/hermes --name hermes -i 2
