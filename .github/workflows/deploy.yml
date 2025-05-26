@@ -4,7 +4,7 @@ on:
   push:
     branches:
       - main
-      - zd--update-cli
+      - zd--update-ci
 
 jobs:
   build:
