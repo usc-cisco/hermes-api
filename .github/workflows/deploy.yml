@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - main
-      - zd--update-ci
 
 jobs:
   build:
@@ -31,7 +30,7 @@ jobs:
         run: |
           bun run build
 
-      - name: Run Hermes
+      - name: Stop Hermes
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DCISM_HOST }}
@@ -40,7 +39,7 @@ jobs:
           port: ${{ secrets.DCISM_PORT }}
           script: |
             cd ${{ secrets.DCISM_SUBDOMAIN }}
-            bun pm2 stop hermes || true
+            bun pm2 delete hermes
 
       - name: Upload Build via SCP
         uses: appleboy/scp-action@v0.1.7
