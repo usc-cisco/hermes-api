@@ -35,11 +35,11 @@ jobs:
         uses: appleboy/scp-action@v0.1.7
         with:
           host: ${{ secrets.DCISM_HOST }}
-          username: ${{ secrets.DCISM_USERNAME }}
-          password: ${{ secrets.DCISM_PASSWORD }}
+          username: ${{ secrets.DCISM_TEST_USERNAME }}
+          password: ${{ secrets.DCISM_TEST_PASSWORD }}
           port: ${{ secrets.DCISM_PORT }}
           source: "./dist, sqlite.db, server.log"
-          target: "${{ secrets.DCISM_SUBDOMAIN }}"
+          target: "${{ secrets.DCISM_TEST_SUBDOMAIN }}"
           overwrite: true
 
       - name: Run Hermes
