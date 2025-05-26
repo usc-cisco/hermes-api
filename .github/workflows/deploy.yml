@@ -51,6 +51,7 @@ jobs:
           port: ${{ secrets.DCISM_PORT }}
           script: |
             cd ${{ secrets.DCISM_SUBDOMAIN }}
+            ls
             chmod +x ./dist/hermes
             bun pm2 stop hermes || true
             bun pm2 reload hermes || bun pm2 start ./dist/hermes --name hermes -i 2
