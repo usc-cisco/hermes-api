@@ -38,7 +38,7 @@ jobs:
           username: ${{ secrets.DCISM_USERNAME }}
           password: ${{ secrets.DCISM_PASSWORD }}
           port: ${{ secrets.DCISM_PORT }}
-          source: ["./dist", "sqlite.db", "server.log"]
+          source: "./dist, sqlite.db, server.log"
           target: "${{ secrets.DCISM_SUBDOMAIN }}"
           overwrite: true
 
