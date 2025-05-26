@@ -5,7 +5,6 @@ on:
   push:
     branches:
       - main
-      - zd--update-ci
 
 jobs:
   # This job will automatically overwrite the .env file in the server
