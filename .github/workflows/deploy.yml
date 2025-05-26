@@ -52,6 +52,7 @@ jobs:
           script: |
             cd ${{ secrets.DCISM_SUBDOMAIN }}
             ls
+            bun pm2 logs hermes || true
             chmod +x ./dist/hermes
             bun pm2 stop hermes || true
             bun pm2 reload hermes || bun pm2 start ./dist/hermes --name hermes -i 2
