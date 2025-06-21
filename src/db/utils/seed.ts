@@ -44,10 +44,10 @@ async function seedDatabase() {
     // Seed coordinators
     await db.insert(coordinators).values([
       {
-        name: "Doriz Roa",
+        name: "Archival Sebial",
         courseName: "BSCS",
         status: CoordinatorStatusEnum.AVAILABLE,
-        email: "drroa@usc.edu.ph",
+        email: "ajsebial@usc.edu.ph",
       },
       {
         name: "Gran Sabandal",
@@ -56,10 +56,10 @@ async function seedDatabase() {
         email: "ggsabandal@usc.edu.ph",
       },
       {
-        name: "Glenn Pepito",
+        name: "Christian Maderazo",
         courseName: "BSIS",
         status: CoordinatorStatusEnum.AVAILABLE,
-        email: "gbpepito@usc.edu.ph",
+        email: "cvmaderazo@usc.edu.ph",
       },
     ])
     console.log("Seeded coordinators")
