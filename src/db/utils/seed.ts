@@ -25,21 +25,16 @@ async function seedDatabase() {
       })
       .filter((entry): entry is { id: string; name: string } => entry !== null)
 
-    // Validate that we have enough student records
-    if (studentData.length < 1500) {
-      throw new Error(`Not enough student records in file. Found ${studentData.length}, need 1522`)
-    }
-
     // Begin seeding all tables
     console.log("Starting database seeding...")
 
     // Seed students table
-    await db.insert(students).values(studentData)
-    console.log("Seeded students table with 1522 records")
+    await db.insert(students).values(studentData).onConflictDoNothing()
+    console.log(`Seeded students table with ${studentData.length} records`)
 
     // Seed courses
-    await db.insert(courses).values([{ courseName: "BSCS" }, { courseName: "BSIT" }, { courseName: "BSIS" }])
-    console.log("Seeded courses table")
+    await db.insert(courses).values([{ courseName: "BSCS" }, { courseName: "BSIT" }, { courseName: "BSIS" }]).onConflictDoNothing()
+    console.log(`Seeded courses table with 3 records`)
 
     // Seed coordinators
     await db.insert(coordinators).values([
@@ -62,6 +57,7 @@ async function seedDatabase() {
         email: "cvmaderazo@usc.edu.ph",
       },
     ])
+    .onConflictDoNothing()
     console.log("Seeded coordinators")
 
     console.log("Database seeding completed successfully")
