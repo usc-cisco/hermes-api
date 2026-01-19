@@ -1,6 +1,7 @@
 import { coordinatorService } from "../db/services/coordinator.service"
 import { queueNumberService } from "../db/services/queue-number.service"
-import { validateCourse, validateQueueToken } from "../middleware/authMiddleware"
+import { studentService } from "../db/services/student.service"
+import { validateQueueToken } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CoordinatorStatusEnum } from "../types/enums/CoordinatorStatusEnum"
@@ -23,6 +24,9 @@ export const queue = new Elysia({ prefix: "/queue" })
   .model({
     course: t.Object({
       course: CourseUnion,
+    }),
+    addStudentToQueue: t.Object({
+      idNumber: t.String({ description: "The student's ID number" }),
     }),
   })
   .delete("/admin/reset", () => queueNumberService.resetAll(), {
@@ -161,12 +165,18 @@ export const queue = new Elysia({ prefix: "/queue" })
     },
   )
   .post(
-    "/:course/number",
-    async ({ headers, params: { course } }: QueueContext) => {
-      const studentId = headers.idNumber
+    "/admin/:course/number",
+    async ({ body, params: { course } }) => {
+      const studentId = body.idNumber
 
       if (!studentId) {
-        return error(404, "Student ID not found")
+        return { error: "Student ID is required" }
+      }
+
+      // Check if student exists
+      const student = await studentService.findStudentById(studentId)
+      if (!student) {
+        return { error: "Student not found" }
       }
 
       // Check if coordinator is still accepting new queue numbers
@@ -177,51 +187,58 @@ export const queue = new Elysia({ prefix: "/queue" })
           coordinatorStatus as CoordinatorStatusEnum,
         )
       ) {
-        return error(403, "Coordinator is not accepting any new queue numbers")
+        return { error: "Coordinator is not accepting any new queue numbers" }
       }
 
       // Check if student already has a queue number
-      if (await queueNumberService.findByStudentId(studentId)) {
-        return error(400, "Student already has a queue number")
+      const existingQueueNumber = await queueNumberService.findByStudentId(studentId)
+      if (existingQueueNumber) {
+        return { error: "Student already has a queue number" }
       }
 
-      return await queueNumberService.enqueue(course, studentId)
+      await queueNumberService.enqueue(course, studentId)
+      return { success: true }
     },
     {
       params: "course",
-      // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
-      beforeHandle: [validateQueueToken, validateCourse],
+      body: "addStudentToQueue",
       tags: ["Queue"],
       detail: {
-        description: "Creates a queue number and associates the JWT student ID with it.",
+        description: "Adds a student to the queue for a specific course (admin endpoint).",
+        security: [
+          {
+            basicAuth: [],
+          },
+        ],
         requestBody: {
-          required: false,
-          description: "No request body required. (!) Make sure to select None as the body type.",
-          content: {},
+          required: true,
+          description: "The student's ID number.",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  idNumber: {
+                    type: "string",
+                    description: "The student's ID number",
+                  },
+                },
+                required: ["idNumber"],
+              },
+            },
+          },
         },
         responses: {
           "200": {
-            description: "Successfully created a queue number for the student.",
+            description: "Successfully added the student to the queue.",
             content: {
               "application/json": {
                 schema: {
                   type: "object",
                   properties: {
-                    id: {
-                      type: "number",
-                      description: "The queue number SQL id. Not important.",
-                    },
-                    studentId: {
-                      type: "string",
-                      description: "The studentId associated with the queue number.",
-                    },
-                    courseName: {
-                      type: "string",
-                      description: "The queue number's course (ie. BSCS, BSIT, BSIS).",
-                    },
-                    queueNumber: {
-                      type: "number",
-                      description: "The queue number.",
+                    success: {
+                      type: "boolean",
+                      description: "Indicates if the operation was successful",
                     },
                   },
                 },
@@ -229,19 +246,124 @@ export const queue = new Elysia({ prefix: "/queue" })
             },
           },
           "400": {
-            description: "Student already has a queue number.",
+            description: "Bad request (e.g., student already has a queue number, student ID missing).",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: {
+                      type: "string",
+                      description: "Error message",
+                    },
+                  },
+                },
+              },
+            },
           },
-          "401": {
-            description: "Student's is incorrectly trying to join another course's queue.",
-          },
-          "403": {
-            description:
-              'The coordinator set their status to "unavailable" or "cutoff", meaning they are not accepting any new queue numbers.',
+          "404": {
+            description: "Student not found.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: {
+                      type: "string",
+                      description: "Error message",
+                    },
+                  },
+                },
+              },
+            },
           },
         },
       },
     },
   )
+  // TODO: Uncomment when you wish to re-enable self-enqueueing for students
+  // .post(
+  //   "/:course/number",
+  //   async ({ headers, params: { course } }: QueueContext) => {
+  //     const studentId = headers.idNumber
+
+  //     if (!studentId) {
+  //       return error(404, "Student ID not found")
+  //     }
+
+  //     // Check if coordinator is still accepting new queue numbers
+  //     const coordinatorStatus = (await coordinatorService.findCoordinatorByCourse(course)).status
+  //     if (
+  //       coordinatorStatus &&
+  //       [CoordinatorStatusEnum.UNAVAILABLE, CoordinatorStatusEnum.CUTOFF].includes(
+  //         coordinatorStatus as CoordinatorStatusEnum,
+  //       )
+  //     ) {
+  //       return error(403, "Coordinator is not accepting any new queue numbers")
+  //     }
+
+  //     // Check if student already has a queue number
+  //     if (await queueNumberService.findByStudentId(studentId)) {
+  //       return error(400, "Student already has a queue number")
+  //     }
+
+  //     return await queueNumberService.enqueue(course, studentId)
+  //   },
+  //   {
+  //     params: "course",
+  //     // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
+  //     beforeHandle: [validateQueueToken, validateCourse],
+  //     tags: ["Queue"],
+  //     detail: {
+  //       description: "Creates a queue number and associates the JWT student ID with it.",
+  //       requestBody: {
+  //         required: false,
+  //         description: "No request body required. (!) Make sure to select None as the body type.",
+  //         content: {},
+  //       },
+  //       responses: {
+  //         "200": {
+  //           description: "Successfully created a queue number for the student.",
+  //           content: {
+  //             "application/json": {
+  //               schema: {
+  //                 type: "object",
+  //                 properties: {
+  //                   id: {
+  //                     type: "number",
+  //                     description: "The queue number SQL id. Not important.",
+  //                   },
+  //                   studentId: {
+  //                     type: "string",
+  //                     description: "The studentId associated with the queue number.",
+  //                   },
+  //                   courseName: {
+  //                     type: "string",
+  //                     description: "The queue number's course (ie. BSCS, BSIT, BSIS).",
+  //                   },
+  //                   queueNumber: {
+  //                     type: "number",
+  //                     description: "The queue number.",
+  //                   },
+  //                 },
+  //               },
+  //             },
+  //           },
+  //         },
+  //         "400": {
+  //           description: "Student already has a queue number.",
+  //         },
+  //         "401": {
+  //           description: "Student's is incorrectly trying to join another course's queue.",
+  //         },
+  //         "403": {
+  //           description:
+  //             'The coordinator set their status to "unavailable" or "cutoff", meaning they are not accepting any new queue numbers.',
+  //         },
+  //       },
+  //     },
+  //   },
+  // )
   .patch(
     "/admin/:course/number/current",
     async ({ params: { course } }: QueueContext) => {

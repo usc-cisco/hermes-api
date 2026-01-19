@@ -8,12 +8,13 @@ import { cors } from "@elysiajs/cors"
 import { swagger } from "@elysiajs/swagger"
 import { Elysia, error as elysiaError } from "elysia"
 import { student } from "./routers/student.router"
+import { announcement } from "./routers/announcement.router"
 
 const app = new Elysia()
   .use(
     basicAuth({
       credentials: { env: "ADMIN_CREDENTIALS" },
-      scope: ["/auth/admin", "/queue/admin", "/coordinator/admin", "/student/admin"],
+      scope: ["/auth/admin", "/queue/admin", "/coordinator/admin", "/student/admin", "/announcement/admin"],
       skipCorsPreflight: true,
     }),
   )
@@ -31,6 +32,7 @@ const app = new Elysia()
           { name: "Queue", description: "Methods related to interacting with the queue" },
           { name: "Auth", description: "Authentication endpoints" },
           { name: "Student", description: "Methods related to student management" },
+          { name: "Announcement", description: "Methods related to announcements" },
           { name: "Debug", description: "Routes for debugging" },
         ],
         components: {
@@ -76,6 +78,7 @@ const app = new Elysia()
   .use(coordinator)
   .use(auth)
   .use(student)
+  .use(announcement)
   .listen(env.PORT)
 
 console.log(`🦊 Elysia is running at http://${app.server?.hostname}:${app.server?.port}`)
