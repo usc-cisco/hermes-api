@@ -1,7 +1,7 @@
 import { coordinatorService } from "../db/services/coordinator.service"
 import { queueNumberService } from "../db/services/queue-number.service"
 import { studentService } from "../db/services/student.service"
-import { validateCourse, validateQueueToken } from "../middleware/authMiddleware"
+import { validateQueueToken } from "../middleware/authMiddleware"
 import { jwtPlugin } from "../plugin/JwtPlugin"
 import { CourseUnion } from "../types/entities/dtos/CourseUnion"
 import { CoordinatorStatusEnum } from "../types/enums/CoordinatorStatusEnum"
