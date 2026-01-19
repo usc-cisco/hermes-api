@@ -1,4 +1,4 @@
-import Elysia, { t } from "elysia";
+import Elysia, { error, t } from "elysia";
 import { jwtPlugin } from "../plugin/JwtPlugin";
 import { studentService } from "../db/services/student.service";
 
@@ -17,6 +17,67 @@ export const student = new Elysia({ prefix: "/student" })
             name: t.String({ description: "The student's name" }),
         }),
     })
+    .get(
+        "/admin/:idNumber",
+        async ({ params }) => {
+            const student = await studentService.findStudentById(params.idNumber);
+            
+            if (!student) {
+                return error(404, { error: "Student not found" });
+            }
+
+            return { student: { id: student.id, name: student.name } };
+        },
+        {
+            tags: ["Student"],
+            detail: {
+                description: "Fetches a student by their ID number.",
+                responses: {
+                    "200": {
+                        description: "Successfully retrieved the student.",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        student: {
+                                            type: "object",
+                                            properties: {
+                                                id: {
+                                                    type: "string",
+                                                    description: "The student's ID number",
+                                                },
+                                                name: {
+                                                    type: "string",
+                                                    description: "The student's name",
+                                                },
+                                            },
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                    "404": {
+                        description: "Student not found.",
+                        content: {
+                            "application/json": {
+                                schema: {
+                                    type: "object",
+                                    properties: {
+                                        error: {
+                                            type: "string",
+                                            description: "Error message",
+                                        },
+                                    },
+                                },
+                            },
+                        },
+                    },
+                },
+            },
+        },
+    )
     .guard({
         body: "student",
     })
