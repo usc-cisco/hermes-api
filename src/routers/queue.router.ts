@@ -28,6 +28,9 @@ export const queue = new Elysia({ prefix: "/queue" })
     addStudentToQueue: t.Object({
       idNumber: t.String({ description: "The student's ID number" }),
     }),
+    dequeueStudent: t.Object({
+      idNumber: t.String({ description: "The student's ID number to remove from the queue" }),
+    }),
   })
   .delete("/admin/reset", () => queueNumberService.resetAll(), {
     tags: ["Queue"],
@@ -35,34 +38,36 @@ export const queue = new Elysia({ prefix: "/queue" })
       description: "Deletes all the queue numbers for every course.",
     },
   })
-  .delete(
-    "/number",
-    async ({ headers }: QueueContext) => {
-      const studentId = headers.idNumber
+  // TODO: Student dequeue feature has been disabled. Students cannot remove themselves from the queue.
+  // If you need to remove a student from the queue, use the admin endpoint or contact a coordinator.
+  // .delete(
+  //   "/number",
+  //   async ({ headers }: QueueContext) => {
+  //     const studentId = headers.idNumber
 
-      if (!studentId) {
-        return error(400, "Student ID not found")
-      }
+  //     if (!studentId) {
+  //       return error(400, "Student ID not found")
+  //     }
 
-      return await queueNumberService.dequeueById(studentId)
-    },
-    {
-      // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
-      beforeHandle: [validateQueueToken],
-      tags: ["Queue"],
-      detail: {
-        description: "Deletes a student's own queue number.",
-        responses: {
-          "200": {
-            description: "Successfully deleted the student's queue number.",
-          },
-          "401": {
-            description: "Unauthorized.",
-          },
-        },
-      },
-    },
-  )
+  //     return await queueNumberService.dequeueById(studentId)
+  //   },
+  //   {
+  //     // @ts-expect-error TODO: Change this to an updated version of the basicAuth middleware once my patch is merged
+  //     beforeHandle: [validateQueueToken],
+  //     tags: ["Queue"],
+  //     detail: {
+  //       description: "Deletes a student's own queue number.",
+  //       responses: {
+  //         "200": {
+  //           description: "Successfully deleted the student's queue number.",
+  //         },
+  //         "401": {
+  //           description: "Unauthorized.",
+  //         },
+  //       },
+  //     },
+  //   },
+  // )
   .get(
     "/number",
     async ({ headers }: QueueContext) => {
@@ -263,6 +268,89 @@ export const queue = new Elysia({ prefix: "/queue" })
           },
           "404": {
             description: "Student not found.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: {
+                      type: "string",
+                      description: "Error message",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  )
+  .delete(
+    "/admin/number",
+    async ({ body }) => {
+      const studentId = body.idNumber
+
+      if (!studentId) {
+        return { error: "Student ID is required" }
+      }
+
+      // Check if student has a queue number
+      const queueNumber = await queueNumberService.findByStudentId(studentId)
+      if (!queueNumber) {
+        return { error: "Student does not have a queue number" }
+      }
+
+      await queueNumberService.dequeueById(studentId)
+      return { success: true }
+    },
+    {
+      body: "dequeueStudent",
+      tags: ["Queue"],
+      detail: {
+        description: "Removes a student from the queue by their ID number (admin endpoint).",
+        security: [
+          {
+            basicAuth: [],
+          },
+        ],
+        requestBody: {
+          required: true,
+          description: "The student's ID number.",
+          content: {
+            "application/json": {
+              schema: {
+                type: "object",
+                properties: {
+                  idNumber: {
+                    type: "string",
+                    description: "The student's ID number to remove from the queue",
+                  },
+                },
+                required: ["idNumber"],
+              },
+            },
+          },
+        },
+        responses: {
+          "200": {
+            description: "Successfully removed the student from the queue.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: {
+                      type: "boolean",
+                      description: "Indicates if the operation was successful",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request (e.g., student ID missing or student does not have a queue number).",
             content: {
               "application/json": {
                 schema: {
