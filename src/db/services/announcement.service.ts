@@ -2,7 +2,7 @@ import { db } from ".."
 import { IAnnouncementService } from "../../types/abstracts/announcement-service.abstract"
 import { Announcement } from "../../types/entities/Announcement"
 import { InsertAnnouncement, SelectAnnouncement, announcements } from "../models/announcement.model"
-import { desc } from "drizzle-orm"
+import { desc, eq } from "drizzle-orm"
 
 export const announcementService: IAnnouncementService = {
   async addAnnouncement(text: string): Promise<Announcement> {
@@ -34,5 +34,9 @@ export const announcementService: IAnnouncementService = {
       text: record.text,
       date: record.createdAt,
     }))
+  },
+
+  async deleteAnnouncement(id: number): Promise<void> {
+    await db.delete(announcements).where(eq(announcements.id, id))
   },
 }
