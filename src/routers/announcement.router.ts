@@ -124,3 +124,85 @@ export const announcement = new Elysia({ prefix: "/announcement" })
       },
     },
   )
+  .delete(
+    "/admin/:id",
+    async ({ params }) => {
+      const id = Number(params.id)
+
+      if (isNaN(id) || id <= 0) {
+        return { error: "Invalid announcement ID" }
+      }
+
+      // Check if announcement exists before deleting
+      const allAnnouncements = await announcementService.getAllAnnouncements()
+      const announcementExists = allAnnouncements.some((ann) => ann.id === id)
+
+      if (!announcementExists) {
+        return { error: "Announcement not found" }
+      }
+
+      await announcementService.deleteAnnouncement(id)
+      return { success: true }
+    },
+    {
+      tags: ["Announcement"],
+      detail: {
+        description: "Deletes an announcement by its ID (admin endpoint).",
+        security: [
+          {
+            basicAuth: [],
+          },
+        ],
+        responses: {
+          "200": {
+            description: "Successfully deleted the announcement.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    success: {
+                      type: "boolean",
+                      description: "Indicates if the operation was successful",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "400": {
+            description: "Bad request (e.g., invalid announcement ID).",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: {
+                      type: "string",
+                      description: "Error message",
+                    },
+                  },
+                },
+              },
+            },
+          },
+          "404": {
+            description: "Announcement not found.",
+            content: {
+              "application/json": {
+                schema: {
+                  type: "object",
+                  properties: {
+                    error: {
+                      type: "string",
+                      description: "Error message",
+                    },
+                  },
+                },
+              },
+            },
+          },
+        },
+      },
+    },
+  )
