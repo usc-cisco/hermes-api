@@ -11,7 +11,26 @@ jobs:
     name: Build and Run
     runs-on: ubuntu-latest
     steps:
-      - name: Build and Run Hermes
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Install bun
+        uses: oven-sh/setup-bun@v2
+
+      - name: Install Dependencies
+        run: bun install
+
+      - name: Generate and Migrate Database
+        run: |
+          bun run db:generate
+          bun run db:migrate
+          bun run db:seed
+
+      - name: Build Hermes
+        run: |
+          bun run build
+
+      - name: Stop Hermes
         uses: appleboy/ssh-action@v1.2.0
         with:
           host: ${{ secrets.DCISM_HOST }}
@@ -20,11 +39,27 @@ jobs:
           port: ${{ secrets.DCISM_PORT }}
           script: |
             cd ${{ secrets.DCISM_SUBDOMAIN }}
-            git reset --hard && git clean -fd && git pull origin main
-            bun install
-            bun run db:generate
-            bun run db:migrate
             bun pm2 stop hermes
-            bun run build
+
+      - name: Upload Build via SCP
+        uses: appleboy/scp-action@v0.1.7
+        with:
+          host: ${{ secrets.DCISM_HOST }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
+          port: ${{ secrets.DCISM_PORT }}
+          source: "./dist, sqlite.db, server.log"
+          target: "${{ secrets.DCISM_SUBDOMAIN }}"
+          overwrite: true
+
+      - name: Run Hermes
+        uses: appleboy/ssh-action@v1.2.0
+        with:
+          host: ${{ secrets.DCISM_HOST }}
+          username: ${{ secrets.DCISM_USERNAME }}
+          password: ${{ secrets.DCISM_PASSWORD }}
+          port: ${{ secrets.DCISM_PORT }}
+          script: |
+            cd ${{ secrets.DCISM_SUBDOMAIN }}
             chmod +x ./dist/hermes
             bun pm2 reload hermes
