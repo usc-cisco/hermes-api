@@ -34,3 +34,6 @@ sqlite.db
 # drizzle
 drizzle
 
+# data
+src/db/data/student-ids.txt
+
