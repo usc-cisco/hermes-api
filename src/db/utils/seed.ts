@@ -56,6 +56,12 @@ async function seedDatabase() {
         status: CoordinatorStatusEnum.AVAILABLE,
         email: "cvmaderazo@usc.edu.ph",
       },
+      {
+        name: "Christian Maderazo",
+        courseName: "BSDS",
+        status: CoordinatorStatusEnum.AVAILABLE,
+        email: "cvmaderazo@usc.edu.ph",
+      },
     ])
     .onConflictDoNothing()
     console.log("Seeded coordinators")
