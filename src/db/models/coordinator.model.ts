@@ -4,7 +4,7 @@ import { integer, sqliteTable, text } from "drizzle-orm/sqlite-core"
 
 export const coordinators = sqliteTable("coordinators", {
   id: integer("id").primaryKey(),
-  name: text("name").unique().notNull(),
+  name: text("name").notNull(),
   courseName: text("course_name")
     .notNull()
     .references(() => courses.courseName),
