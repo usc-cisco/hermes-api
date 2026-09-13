@@ -33,8 +33,8 @@ async function seedDatabase() {
     console.log(`Seeded students table with ${studentData.length} records`)
 
     // Seed courses
-    await db.insert(courses).values([{ courseName: "BSCS" }, { courseName: "BSIT" }, { courseName: "BSIS" }]).onConflictDoNothing()
-    console.log(`Seeded courses table with 3 records`)
+    await db.insert(courses).values([{ courseName: "BSCS" }, { courseName: "BSIT" }, { courseName: "BSIS" }, { courseName: "BSDS" }]).onConflictDoNothing()
+    console.log(`Seeded courses table with 4 records`)
 
     // Seed coordinators
     await db.insert(coordinators).values([
